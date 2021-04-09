@@ -52,8 +52,8 @@ public class HomeWorkWeek3Ex3 {
                 "Cannot click search input");
         MobileElement selectedSearchField = waitForElementAndSendKeys(By.xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"), "Java",
                 "Cannot find search field");
-        MobileElement element = waitForElementPresent(By.xpath("//*[@class='android.view.ViewGroup']//*[contains(@text, 'Java')]"),
-                "Cannot find search results");
+        Assert.assertTrue("Cannot find search results", waitForElementPresent(By.id("org.wikipedia:id/page_list_item_title"),
+                "Cannot find search results").isDisplayed());
         List<MobileElement> searchResultBefore = driver.findElements(By.xpath("//*[@class='android.view.ViewGroup']//*[contains(@text, 'Java')]"));
         Assert.assertTrue("Search result is empty", searchResultBefore.size() > 1);
         waitForElementAndClick(By.id("org.wikipedia:id/search_close_btn"), "cannot find close button");
