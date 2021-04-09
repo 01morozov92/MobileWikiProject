@@ -38,7 +38,6 @@ public class HomeWorkWeek3Ex2 {
         capabilities.setCapability("appActivity", "main.MainActivity");
 
         driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-//        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
     }
 
     @After
@@ -57,7 +56,7 @@ public class HomeWorkWeek3Ex2 {
     public void checkSearchFieldPartialText(){
         MobileElement skipBtn = waitForElementAndClick(By.xpath("//*[@text='ПРОПУСТИТЬ']"),
                 "Cannot click skip button", 5);
-        assertElementHasPartialText(By.xpath("//*[contains(@text, 'Поиск')]"), "Поиr", "The element does not contain the expected text");
+        assertElementHasPartialText(By.xpath("//*[contains(@text, 'Поиск')]"), "Поиск", "The element does not contain the expected text");
     }
 
     private MobileElement waitForElementAndClick(By by, String errorMessage, long timeoutInSeconds){
@@ -83,7 +82,6 @@ public class HomeWorkWeek3Ex2 {
     }
 
     private void assertElementHasText(By by, String text, String errorMessage){
-//        MobileElement element = waitForElementPresent(by, errorMessage, 5);
         String textOfElement = waitForElementPresent(by, errorMessage, 5).getText();
         Assert.assertEquals(errorMessage, text, textOfElement);
     }
