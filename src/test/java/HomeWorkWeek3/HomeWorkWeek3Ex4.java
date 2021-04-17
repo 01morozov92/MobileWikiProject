@@ -1,3 +1,5 @@
+package HomeWorkWeek3;
+
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
@@ -69,7 +71,7 @@ public class HomeWorkWeek3Ex4 {
         MobileElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         element.click();
         return element;
-    }
+    }//driver.findElement(By.xpath("//*[contains(@text, 'Java')]//*div[2]//preceding-sibling::[1]"));
 
     private MobileElement waitForElementAndClick(By by, String errorMessage) {
         MobileElement element = waitForElementPresent(by, errorMessage, 5);
