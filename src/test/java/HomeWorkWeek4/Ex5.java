@@ -57,14 +57,14 @@ public class Ex5 {
     }
 
     @Test
-    public void firstTest() {
+    public void deleteArticleBySwipeTest() {
         String nameOfArticle = "Java";
         String textOfTitle = "Java";
 
         waitForElementAndClick(By.xpath("//*[@text='ПРОПУСТИТЬ']"), "Cannot click skip button", 5);
         waitForElementAndClick(By.xpath("//*[contains(@text, 'Поиск')]"), "Cannot click search input", 5);
         waitForElementAndSendKeys(By.xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"), "Java", "Cannot find search field");
-        waitForElementAndClick(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup[1]"), "Cannot find element", 15);
+        waitForElementAndClick(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup[1]"), "Cannot find first element in result list ", 15);
 
         waitForElementAndClick(By.id("org.wikipedia:id/article_menu_bookmark"), "Cannot find bookmark element", 10);
         waitForElementAndClick(By.xpath("//*[@text='ДОБАВИТЬ В СПИСОК']"), "Cannot find 'ДОБАВИТЬ В СПИСОК'", 10);
@@ -77,16 +77,16 @@ public class Ex5 {
         waitForElementAndClick(By.xpath("//android.widget.ImageButton[@content-desc='Перейти вверх']"), "Cannot find back button", 10);
 
         waitForElementAndSendKeys(By.xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"), "Appium", "Cannot find search field");
-        waitForElementAndClick(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup[1]"), "Cannot find element", 10);
+        waitForElementAndClick(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup[1]"), "Cannot find first element in result list", 10);
         waitForElementAndClick(By.id("org.wikipedia:id/article_menu_bookmark"), "Cannot find bookmark element", 5);
         waitForElementAndClick(By.xpath("//*[@text='ДОБАВИТЬ В СПИСОК']"), "Cannot find 'ДОБАВИТЬ В СПИСОК'", 10);
         waitForElementAndClick(By.xpath("//*[@text='Мой список']"), "Cannot find 'Мой список'", 10);
         waitForElementAndClick(By.xpath("//*[@text='ПРОСМОТР СПИСКА']"), "Cannot find 'ПРОСМОТР СПИСКА'", 10);
 
         swipe(waitOptions(Duration.ofMillis(500)), Direction.вправо, By.xpath("//*[@text='AppImage']"));;
-        waitForElementAndClick(By.xpath("//*[@text='" + nameOfArticle + "']"), "Cannot find element with text 'Java'");
+        waitForElementAndClick(By.xpath("//*[@text='" + nameOfArticle + "']"), String.format("Cannot find element with text %s", nameOfArticle));
         String expectedResult = "Java";
-        String actualResult = waitForElementPresent(By.xpath("//*[@class='android.webkit.WebView'][@text='" + textOfTitle + "']"), "Cannot find element with text 'Java'", 10).getText();
+        String actualResult = waitForElementPresent(By.xpath("//*[@class='android.webkit.WebView'][@text='" + textOfTitle + "']"), String.format("Cannot find element with text %s", textOfTitle), 10).getText();
         Assert.assertEquals(expectedResult, actualResult);
     }
 
