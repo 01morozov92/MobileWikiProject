@@ -1,4 +1,4 @@
-package HomeWorkWeek5;
+package HomeWorkWeek4;
 
 public enum Direction {
     вправо("Right"),
