@@ -8,9 +8,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -20,7 +18,7 @@ import java.net.URL;
 
 import static org.junit.Assert.fail;
 
-public class Ex6 extends Ex5{
+public class Ex7 {
 
     private AppiumDriver<MobileElement> driver;
 
@@ -30,6 +28,7 @@ public class Ex6 extends Ex5{
 
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("deviceName", "AndroidTestDevice");
+        capabilities.setCapability("orientation", "PORTRAIT");
         capabilities.setCapability("udid", "emulator-5554");
         capabilities.setCapability("avd", "Pixel_3a_API_30_x86");
         capabilities.setCapability("platformVersion", "11.0");
@@ -51,12 +50,22 @@ public class Ex6 extends Ex5{
     }
 
     @Test
-    public void deleteArticleBySwipeTest() {
+    public void rotateScreenTest() {
+        driver.rotate(ScreenOrientation.LANDSCAPE);
         waitForElementAndClick(By.xpath("//*[@text='ПРОПУСТИТЬ']"), "Cannot click skip button", 5);
         waitForElementAndClick(By.xpath("//*[contains(@text, 'Поиск')]"), "Cannot click search input", 5);
         waitForElementAndSendKeys(By.xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"), "Java", "Cannot find search field");
         waitForElementAndClick(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup[1]"), "Cannot find first element in result list ", 15);
         assertElementPresent("Java", By.xpath("//*[@text='Java']"));
+    }
+
+    @Test
+    public void checkScreenOrientation(){
+        waitForElementAndClick(By.xpath("//*[@text='ПРОПУСТИТЬ']"), "Cannot click skip button", 5);
+        int sizeWidth = driver.manage().window().getSize().getWidth();
+        if (sizeWidth > 1080){
+            fail("Screen orientation did not return to its original state");
+        }
     }
 
     public void assertElementPresent(String expectedResult, By by){
