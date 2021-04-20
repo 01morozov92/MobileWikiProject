@@ -51,13 +51,16 @@ public class Ex6 extends Ex5{
 
     @Test
     public void deleteArticleBySwipeTest() {
-        String expectedTitle = "Java";
-
         waitForElementAndClick(By.xpath("//*[@text='ПРОПУСТИТЬ']"), "Cannot click skip button", 5);
         waitForElementAndClick(By.xpath("//*[contains(@text, 'Поиск')]"), "Cannot click search input", 5);
         waitForElementAndSendKeys(By.xpath("//*[@resource-id='org.wikipedia:id/search_src_text']"), "Java", "Cannot find search field");
         waitForElementAndClick(By.xpath("//androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup[1]"), "Cannot find first element in result list ", 15);
-        String actualTitle = driver.findElement(By.xpath("//*[@text='Java']")).getText();
+        assertElementPresent("Java", By.xpath("//*[@text='Java']"));
+    }
+
+    public void assertElementPresent(String expectedResult, By by){
+        String expectedTitle = "Java";
+        String actualTitle = driver.findElement(by).getText();
         Assert.assertEquals(String.format("Article title: %s does not match with expected title: %s"), expectedTitle, actualTitle);
     }
 
