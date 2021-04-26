@@ -15,6 +15,7 @@ public class SearchPageObject extends MainPageObject {
             FIRST_ELEMENT_IN_SEARCH_RESULT = "//androidx.recyclerview.widget.RecyclerView/android.view.ViewGroup[1]",
             LIST_OF_SEARCH_RESULTS = "//*[@class='android.view.ViewGroup']//*[contains(@text, '{SEARCH_PHRASE}')]",
             SEARCH_CLOSE_BTN = "org.wikipedia:id/search_close_btn",
+            SEARCH_BY_TITLE_AND_DESCRIPTION = "//*[@text='{DESCRIPTION}']/preceding-sibling::*[@text='{TITLE}']",
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id='org.wikipedia:id/search_results_container']//*[@text='{SUBSTRING}']";//язык программирования
 
     public SearchPageObject(AppiumDriver<MobileElement> driver) {
@@ -26,6 +27,11 @@ public class SearchPageObject extends MainPageObject {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
     }
 
+    private static String getDescriptionAndTitle(String title, String description){
+
+        return SEARCH_BY_TITLE_AND_DESCRIPTION.replace("{DESCRIPTION}", description).replace("{TITLE}", title);
+    }
+
     private static String getAllArticlesBySearchPhrase(String searchPhrase){
         return LIST_OF_SEARCH_RESULTS.replace("{SEARCH_PHRASE}", searchPhrase);
     }
@@ -34,6 +40,10 @@ public class SearchPageObject extends MainPageObject {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("//*[@text='{SUBSTRING}']", "");
     }
     /* TEMPLATES METHODS */
+
+    public void waitForElementByTitleAndDescription(String title, String description){
+       this.waitForElementPresent(By.xpath(getDescriptionAndTitle(title, description)), String.format("Cannot find element by title: %s, and description: %s", title, description),5);
+    }
 
     public boolean checkVisionOfALlSearchResults(){
         return this.waitForElementPresent(By.xpath(getAllSearchResults()),
