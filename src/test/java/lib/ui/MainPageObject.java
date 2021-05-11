@@ -13,6 +13,8 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.regex.Pattern;
+
 import static junit.framework.TestCase.fail;
 
 public class MainPageObject {
@@ -23,68 +25,68 @@ public class MainPageObject {
         this.driver = driver;
     }
 
-    public boolean waitForElementNotPresent(By by, String errorMessage, long timeoutInSeconds) {
+    public boolean waitForElementNotPresent(String locator, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
-        return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+        return wait.until(ExpectedConditions.invisibilityOfElementLocated(getLocatorByString(locator)));
     }
 
-    public void waitForElementAndClick(By by, String errorMessage, long timeoutInSeconds) {
+    public void waitForElementAndClick(String locator, String errorMessage, long timeoutInSeconds) {
         int numberOfRetry = 0;
         boolean successfulClick = false;
         do {
             try {
-                MobileElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
+                MobileElement element = waitForElementPresent(locator, errorMessage, timeoutInSeconds);
                 element.click();
                 successfulClick = true;
             } catch (StaleElementReferenceException se) {
                 numberOfRetry++;
-                System.out.println(String.format("Failed to click on element %s due to the StaleElementReferenceException", by));
+                System.out.println(String.format("Failed to click on element %s due to the StaleElementReferenceException", locator));
                 if (numberOfRetry == 3) {
                     se.printStackTrace();
-                    fail(String.format("Cannot click on element %s due to the StaleElementReferenceException", by));
+                    fail(String.format("Cannot click on element %s due to the StaleElementReferenceException", locator));
                 }
             }
         } while (!successfulClick);
     }
 
-    public void waitForElementAndClick(By by, String errorMessage) {
+    public void waitForElementAndClick(String locator, String errorMessage) {
         int numberOfRetry = 0;
         boolean successfulClick = false;
         do {
             try {
-                MobileElement element = waitForElementPresent(by, errorMessage, 5);
+                MobileElement element = waitForElementPresent(locator, errorMessage, 5);
                 element.click();
                 successfulClick = true;
             } catch (StaleElementReferenceException se) {
                 numberOfRetry++;
-                System.out.println(String.format("Failed to click on element %s due to the StaleElementReferenceException", by));
+                System.out.println(String.format("Failed to click on element %s due to the StaleElementReferenceException", locator));
                 if (numberOfRetry == 3) {
                     se.printStackTrace();
-                    fail(String.format("Cannot click on element %s due to the StaleElementReferenceException", by));
+                    fail(String.format("Cannot click on element %s due to the StaleElementReferenceException", locator));
                 }
             }
         } while (!successfulClick);
     }
 
-    public MobileElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
+    public MobileElement waitForElementPresent(String locator, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
-        return (MobileElement) wait.until(ExpectedConditions.presenceOfElementLocated(by));
+        return (MobileElement) wait.until(ExpectedConditions.presenceOfElementLocated(getLocatorByString(locator)));
     }
 
-    MobileElement waitForElementPresent(By by, String errorMessage) {
-        return waitForElementPresent(by, errorMessage, 5);
+    MobileElement waitForElementPresent(String locator, String errorMessage) {
+        return waitForElementPresent(locator, errorMessage, 5);
     }
 
-    public MobileElement waitForElementAndSendKeys(By by, String value, String errorMessage, long timeoutInSeconds) {
-        MobileElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
+    public MobileElement waitForElementAndSendKeys(String locator, String value, String errorMessage, long timeoutInSeconds) {
+        MobileElement element = waitForElementPresent(locator, errorMessage, timeoutInSeconds);
         element.sendKeys(value);
         return element;
     }
 
-    public MobileElement waitForElementAndSendKeys(By by, String value, String errorMessage) {
-        MobileElement element = waitForElementPresent(by, errorMessage, 5);
+    public MobileElement waitForElementAndSendKeys(String locator, String value, String errorMessage) {
+        MobileElement element = waitForElementPresent(locator, errorMessage, 5);
         element.sendKeys(value);
         return element;
     }
@@ -123,13 +125,13 @@ public class MainPageObject {
         }
     }
 
-    public void swipe(WaitOptions timeOfSwipe, Direction direction, By element) {
+    public void swipe(WaitOptions timeOfSwipe, Direction direction, String locator) {
         TouchAction action = new TouchAction(driver);
         int numberOfTry = 0;
         boolean successfulSwipe = false;
         do {
             try {
-                MobileElement elementForSwipe = waitForElementPresent(element, "Cannot find element for swipe", 20);
+                MobileElement elementForSwipe = waitForElementPresent(locator, "Cannot find element for swipe", 20);
                 Dimension sizeOfElement = elementForSwipe.getSize();
 
                 int startY;
@@ -173,5 +175,20 @@ public class MainPageObject {
                 }
             }
         } while (!successfulSwipe);
+    }
+
+    private By getLocatorByString(String locator_with_type)
+    {
+        String[] exploded_locator = locator_with_type.split(Pattern.quote(":"), 2);
+        String by_type = exploded_locator[0];
+        String locator = exploded_locator[1];
+
+        if (by_type.equals("xpath")) {
+            return By.xpath(locator);
+        } else if (by_type.equals("id")) {
+            return By.id(locator);
+        } else {
+            throw new IllegalArgumentException("Cannot get typ of locator. Locator: " + locator_with_type);
+        }
     }
 }

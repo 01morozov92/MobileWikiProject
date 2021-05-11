@@ -27,7 +27,7 @@ public class Ex6 extends CoreTestCase {
     private void assertElementPresent(String expectedResult, By by){
         String actualResult = null;
         try{
-            MobileElement element = driver.findElement(by);
+            MobileElement element = (MobileElement) driver.findElement(by);
             actualResult = element.getText();
         } catch (NoSuchElementException e){
             e.printStackTrace();

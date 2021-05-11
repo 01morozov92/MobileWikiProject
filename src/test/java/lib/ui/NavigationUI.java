@@ -7,7 +7,7 @@ import org.openqa.selenium.By;
 public class NavigationUI extends MainPageObject{
 
     private  static final String
-    SAVED_LISTS = "//*[@text='Сохранено']";
+    SAVED_LISTS = "xpath://*[@text='Сохранено']";
 
     public NavigationUI(AppiumDriver<MobileElement> driver){
         super(driver);
@@ -18,6 +18,6 @@ public class NavigationUI extends MainPageObject{
     }
 
     public void clickSavedList(){
-        this.waitForElementAndClick(By.xpath(SAVED_LISTS), "Cannot find", 5);
+        this.waitForElementAndClick((SAVED_LISTS), "Cannot find", 5);
     }
 }

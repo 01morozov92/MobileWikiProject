@@ -12,7 +12,7 @@ import static io.appium.java_client.touch.WaitOptions.waitOptions;
 public class MyListsPageObject extends MainPageObject{
 
     private static final String
-            ARTICLE_BY_TITLE_TPL = "//*[@text='{TITLE}']";
+            ARTICLE_BY_TITLE_TPL = "xpath://*[@text='{TITLE}']";
 
     public MyListsPageObject(AppiumDriver<MobileElement> driver){
         super(driver);
@@ -26,6 +26,6 @@ public class MyListsPageObject extends MainPageObject{
     /* TEMPLATES METHODS */
 
     public void swipeArticleToDelete(String articleTitle){
-        this.swipe( waitOptions(Duration.ofMillis(500)), Direction.вправо, By.xpath(getNameOfList(articleTitle)));
+        this.swipe( waitOptions(Duration.ofMillis(500)), Direction.вправо, getNameOfList(articleTitle));
     }
 }

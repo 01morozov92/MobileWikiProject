@@ -1,17 +1,29 @@
 package iOS;
 
-import lib.iOSTestCase;
+import lib.CoreTestCase;
+import lib.ui.WelcomePageObject;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
-public class GetStartedTest extends iOSTestCase {
+public class GetStartedTest extends CoreTestCase {
 
     @Test
-    public void testPassWelcome() throws InterruptedException {
-        Thread.sleep(5000);
-        driver.findElement(By.id("Skip")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.id("Search Wikipedia")).click();
-        System.out.println("");
+    public void testPassThroughWelcomeTest()
+    {
+        if (lib.Platform.getInstance().isAndroid()) {
+            return;
+        }
+        WelcomePageObject welcomePageObject = new WelcomePageObject(driver);
+
+        welcomePageObject.waitForLearnMoreLink();
+        welcomePageObject.clickNextButton();
+
+        welcomePageObject.waitForNewWayToExploreText();
+        welcomePageObject.clickNextButton();
+
+        welcomePageObject.waitForAddOrEditPreferredLangText();
+        welcomePageObject.clickNextButton();
+
+        welcomePageObject.waitForLearnMoreAboutDataCollectedText();
+        welcomePageObject.clickGetStartedButton();
     }
 }

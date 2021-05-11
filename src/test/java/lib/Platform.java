@@ -12,6 +12,7 @@ public class Platform {
     private static final String PLATFORM_IOS = "ios";
     private static final String PLATFORM_ANDROID = "android";
     private static final String APPIUM_URL = "http://127.0.0.1:4723/wd/hub";
+    private static final String APPIUM_URL_MAC_OS = "http://192.30.132.150:4723/wd/hub";
 
     private static Platform instance;
 
@@ -26,10 +27,11 @@ public class Platform {
     }
 
     public AppiumDriver getDriver() throws Exception {
-        URL url = new URL(APPIUM_URL);
         if (this.isAndroid()) {
+            URL url = new URL(APPIUM_URL);
             return new AndroidDriver(url, this.getAndroidDesiredCapabilities());
         } else if (this.isIOS()) {
+            URL url = new URL(APPIUM_URL_MAC_OS);
             return new IOSDriver(url, this.getIOSDesiredCapabilities());
         } else {
             throw new Exception("Cannot detect type of the Driver. Platform value " + this.getPlatformVar());
@@ -56,7 +58,7 @@ public class Platform {
         capabilities.setCapability("uiautomator2ServerInstallTimeout", "200000");
         capabilities.setCapability(MobileCapabilityType.LOCALE, "RU");
         capabilities.setCapability(MobileCapabilityType.LANGUAGE, "ru");
-        capabilities.setCapability("app", "C:\\Users\\MI\\IdeaProjects\\MobileWikiAppiumProject\\apks\\org.wikipedia.apk");
+        capabilities.setCapability("app", "C:\\Users\\i.morozov\\IdeaProjects\\MobileWikiProject\\src\\test\\java\\apks\\org.wikipedia.apk");
         capabilities.setCapability("appPackage", "org.wikipedia");
         capabilities.setCapability("appActivity", "main.MainActivity");
         return capabilities;
