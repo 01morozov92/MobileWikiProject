@@ -69,6 +69,8 @@ public class Platform {
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("deviceName", "iPhone 8");
         capabilities.setCapability("platformVersion", "14.5");
+        capabilities.setCapability(MobileCapabilityType.LOCALE, "RU");
+        capabilities.setCapability(MobileCapabilityType.LANGUAGE, "ru");
         capabilities.setCapability("app", "/Users/Ilya/Downloads/Wikipedia.app");
         return capabilities;
     }
