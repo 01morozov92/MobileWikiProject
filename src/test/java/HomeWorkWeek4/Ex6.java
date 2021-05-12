@@ -15,7 +15,6 @@ public class Ex6 extends CoreTestCase {
     public void testDeleteArticleBySwipeTest() {
         MainPageObject mainPageObject = new MainPageObject(driver);
         SearchPageObject searchPageObject = new SearchPageObject(driver);
-        searchPageObject.skipWelcomePage();
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
         searchPageObject.waitForSearchResultAndClick("язык программирования");;

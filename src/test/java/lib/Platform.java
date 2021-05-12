@@ -4,15 +4,18 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
+import io.appium.java_client.remote.MobilePlatform;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebElement;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URL;
+import java.util.Properties;
 
 public class Platform {
     private static final String PLATFORM_IOS = "ios";
     private static final String PLATFORM_ANDROID = "android";
-    private static final String APPIUM_URL = "http://127.0.0.1:4723/wd/hub";
-    private static final String APPIUM_URL_MAC_OS = "http://192.30.132.150:4723/wd/hub";
 
     private static Platform instance;
 
@@ -26,13 +29,11 @@ public class Platform {
         return instance;
     }
 
-    public AppiumDriver getDriver() throws Exception {
+    public String getPlatform() throws Exception {
         if (this.isAndroid()) {
-            URL url = new URL(APPIUM_URL);
-            return new AndroidDriver(url, this.getAndroidDesiredCapabilities());
+            return PLATFORM_ANDROID;
         } else if (this.isIOS()) {
-            URL url = new URL(APPIUM_URL_MAC_OS);
-            return new IOSDriver(url, this.getIOSDesiredCapabilities());
+            return PLATFORM_IOS;
         } else {
             throw new Exception("Cannot detect type of the Driver. Platform value " + this.getPlatformVar());
         }
@@ -48,8 +49,10 @@ public class Platform {
 
     private DesiredCapabilities getAndroidDesiredCapabilities() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "AndroidTestDevice");
+        capabilities.setCapability(MobileCapabilityType.APP, new File(readProperty("app.android.path")).getAbsolutePath());
+        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, readProperty("device.android.name"));
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
+        capabilities.setCapability(MobileCapabilityType.PLATFORM, MobilePlatform.ANDROID);
         capabilities.setCapability("orientation", "PORTRAIT");
         capabilities.setCapability("udid", "emulator-5554");
         capabilities.setCapability("avd", "Pixel_3a_API_30_x86");
@@ -57,8 +60,7 @@ public class Platform {
         capabilities.setCapability("automationName", "Appium");
         capabilities.setCapability("uiautomator2ServerInstallTimeout", "200000");
         capabilities.setCapability(MobileCapabilityType.LOCALE, "RU");
-        capabilities.setCapability(MobileCapabilityType.LANGUAGE, "ru");
-        capabilities.setCapability("app", "C:\\Users\\i.morozov\\IdeaProjects\\MobileWikiProject\\src\\test\\java\\apks\\org.wikipedia.apk");
+        capabilities.setCapability(MobileCapabilityType.LANGUAGE, "ru");;
         capabilities.setCapability("appPackage", "org.wikipedia");
         capabilities.setCapability("appActivity", "main.MainActivity");
         return capabilities;
@@ -66,12 +68,11 @@ public class Platform {
 
     private DesiredCapabilities getIOSDesiredCapabilities() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName", "iOS");
-        capabilities.setCapability("deviceName", "iPhone 8");
-        capabilities.setCapability("platformVersion", "14.5");
-        capabilities.setCapability(MobileCapabilityType.LOCALE, "RU");
-        capabilities.setCapability(MobileCapabilityType.LANGUAGE, "ru");
-        capabilities.setCapability("app", "/Users/Ilya/Downloads/Wikipedia.app");
+        capabilities.setCapability(MobileCapabilityType.APP, readProperty("app.ios.path"));
+        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, readProperty("device.ios.name"));
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, readProperty("platform.ios.version"));
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.IOS);
+        capabilities.setCapability(MobileCapabilityType.PLATFORM, MobilePlatform.IOS);
         return capabilities;
     }
 
@@ -82,5 +83,59 @@ public class Platform {
 
     private String getPlatformVar() {
         return System.getenv("PLATFORM");
+    }
+
+    public static String readProperty(String property) {
+        Properties prop;
+        String value = null;
+        try {
+            prop = new Properties();
+            prop.load(new FileInputStream(new File("config.properties")));
+
+            value = prop.getProperty(property);
+
+            if (value == null || value.isEmpty()) {
+                throw new Exception("Value not set or empty");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return value;
+    }
+
+    public AppiumDriver<?> getDriver() throws Exception {
+        AppiumDriver<?> driver;
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        if (Boolean.parseBoolean(readProperty("run.hybrid"))) {
+            capabilities.setCapability(MobileCapabilityType.AUTO_WEBVIEW, true);
+        }
+
+        switch (getPlatform().toLowerCase()) {
+
+            case "ios":
+                String completeURL = "http://" + readProperty("run.ip.ios") + ":" + readProperty("run.port") + "/wd/hub";
+                getIOSDesiredCapabilities();
+
+                if ( Boolean.parseBoolean(readProperty("platform.ios.xcode8"))) {
+                    capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
+                }
+
+                driver = new IOSDriver<RemoteWebElement>(new URL(completeURL), getIOSDesiredCapabilities());
+                break;
+
+            case "android":
+                completeURL = "http://" + readProperty("run.ip.android") + ":" + readProperty("run.port") + "/wd/hub";
+                getAndroidDesiredCapabilities();
+
+                driver = new AndroidDriver(new URL(completeURL), getAndroidDesiredCapabilities());
+                break;
+
+            default:
+                throw new Exception("Platform not supported");
+        }
+
+        return driver;
     }
 }

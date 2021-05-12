@@ -9,7 +9,6 @@ public class Ex9 extends CoreTestCase {
     @Test
     public void testCheckArticlesByTitleAndDescription(){
         SearchPageObject searchPageObject = new SearchPageObject(driver);
-        searchPageObject.skipWelcomePage();
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Android");
         searchPageObject.waitForElementByTitleAndDescription
@@ -17,6 +16,6 @@ public class Ex9 extends CoreTestCase {
         searchPageObject.waitForElementByTitleAndDescription
                 ("Android 10", "десятая версия ОС Android");
         searchPageObject.waitForElementByTitleAndDescription
-                ("Android Lollipop", "Версия мобильной ОС Android 5.0");
+                ("Android Lollipop", "Версия мобильной ОС Android 5.0").click();
     }
 }

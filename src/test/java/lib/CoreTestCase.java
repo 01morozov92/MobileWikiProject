@@ -1,15 +1,10 @@
 package lib;
 
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.remote.MobileCapabilityType;
 import junit.framework.TestCase;
 import lib.ui.WelcomePageObject;
 import org.openqa.selenium.ScreenOrientation;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.net.URL;
 import java.time.Duration;
 
 public class CoreTestCase extends TestCase {
@@ -22,14 +17,12 @@ public class CoreTestCase extends TestCase {
         super.setUp();
         driver = Platform.getInstance().getDriver();
         this.rotateScreenPortrait();
-//        this.skipWelcomePageForIOSApp();
-
+        this.skipWelcomePage();
     }
 
     @Override
     protected void tearDown() throws Exception {
         driver.quit();
-
         super.tearDown();
     }
 
@@ -45,9 +38,12 @@ public class CoreTestCase extends TestCase {
         driver.runAppInBackground(Duration.ofSeconds(seconds));
     }
 
-    private void skipWelcomePageForIOSApp()
+    private void skipWelcomePage()
     {
         if(lib.Platform.getInstance().isIOS()) {
+            WelcomePageObject welcomePageObject = new WelcomePageObject(driver);
+            welcomePageObject.clickSkip();
+        } else {
             WelcomePageObject welcomePageObject = new WelcomePageObject(driver);
             welcomePageObject.clickSkip();
         }

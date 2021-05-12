@@ -2,57 +2,57 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
-import org.openqa.selenium.By;
+import io.appium.java_client.pagefactory.AndroidFindBy;
+import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 
 public class ArticlePageObject extends MainPageObject{
 
-    private static final String
-    BOOKMARK_BNT = "id:org.wikipedia:id/article_menu_bookmark",
-    ADD_TO_LIST_BTN = "xpath://*[@text='ДОБАВИТЬ В СПИСОК']",
-    INPUT_FIELD = "id:org.wikipedia:id/text_input",
-    OK_BTN = "id:android:id/button1",
-    CHOOSE_LIST_BY_NAME_TPL = "xpath://*[@text='{NAME}']",
-    VIEW_MY_LSIT = "xpath://*[@text='ПРОСМОТР СПИСКА']",
-    TITLE_OF_ARTICLE_BY_TPL = "xpath://*[@class='android.webkit.WebView'][@text='{TITLE}']";
+    @AndroidFindBy(id = "org.wikipedia:id/article_menu_bookmark")
+    @iOSXCUITFindBy(id = "//*")
+    MobileElement bookmarkBtn;
+
+    @AndroidFindBy(xpath = "//*[@text='ДОБАВИТЬ В СПИСОК']")
+    @iOSXCUITFindBy(id = "//*")
+    MobileElement addToListBtn;
+
+    @AndroidFindBy(id = "org.wikipedia:id/text_input")
+    @iOSXCUITFindBy(id = "//*")
+    MobileElement inputField;
+
+    @AndroidFindBy(id = "android:id/button1")
+    @iOSXCUITFindBy(id = "//*")
+    MobileElement okBtn;
+
+    @AndroidFindBy(xpath = "//*[@text='ПРОСМОТР СПИСКА']")
+    @iOSXCUITFindBy(id = "//*")
+    MobileElement viewMyList;
+
 
     public ArticlePageObject(AppiumDriver<MobileElement> driver){
         super(driver);
     }
 
-    /* TEMPLATES METHODS */
-    private static String getNameOfList(String substring){
-        return CHOOSE_LIST_BY_NAME_TPL.replace("{NAME}", substring);
-    }
-
-    private static String getTitleOfArticleByTpl(String title){
-        return TITLE_OF_ARTICLE_BY_TPL.replace("{TITLE}", title);
-    }
-    /* TEMPLATES METHODS */
-
     public void addArticleToNewMyList(String nameOfFolder){
-        this.waitForElementAndClick(BOOKMARK_BNT, "Cannot find bookmark element", 10);
-        this.waitForElementAndClick(ADD_TO_LIST_BTN, "Cannot find 'ДОБАВИТЬ В СПИСОК'", 10);
-        this.waitForElementAndClick(INPUT_FIELD, "Cannot find text field for list name", 10);
-        this.waitForElementAndSendKeys(INPUT_FIELD, nameOfFolder, "Cannot find text field for list name", 10);
-        this.waitForElementAndClick(OK_BTN, "Cannot find 'OK'", 10);
-        this.waitForElementAndClick(VIEW_MY_LSIT, "Cannot find 'ПРОСМОТР СПИСКА'", 10);
+        this.waitForElementAndClick(bookmarkBtn, "Cannot find bookmark element", 10);
+        this.waitForElementAndClick(addToListBtn, "Cannot find 'ДОБАВИТЬ В СПИСОК'", 10);
+        this.waitForElementAndClick(inputField, "Cannot find text field for list name", 10);
+        this.waitForElementAndSendKeys(inputField, nameOfFolder, "Cannot find text field for list name", 10);
+        this.waitForElementAndClick(okBtn, "Cannot find 'OK'", 10);
+        this.waitForElementAndClick(viewMyList, "Cannot find 'ПРОСМОТР СПИСКА'", 10);
     }
 
     public String getTitleOfArticle(String titleOfArticle){
-        return this.waitForElementPresent((getTitleOfArticleByTpl(titleOfArticle)), String.format("Cannot find element with text %s", titleOfArticle), 10).getText();
+        return this.waitForElementPresent((getElementByText(titleOfArticle, allElements)), String.format("Cannot find element with text %s", titleOfArticle), 10).getText();
     }
 
     public void chooseList(String nameOfList){
-        this.waitForElementAndClick((getNameOfList(nameOfList)), "Cannot find and click article by name");
+        this.waitForElementAndClick((getElementByText(nameOfList, allElements)), "Cannot find and click article by name");
     }
 
     public void addArticleToMyList(String nameOfFolder){
-        this.waitForElementAndClick(BOOKMARK_BNT, "Cannot find bookmark element", 10);
-        this.waitForElementAndClick(ADD_TO_LIST_BTN, "Cannot find 'ДОБАВИТЬ В СПИСОК'", 10);
-        this.waitForElementAndClick(getNameOfList(nameOfFolder), "Cannot find text field for list name", 10);
-        this.waitForElementAndClick(VIEW_MY_LSIT, "Cannot find 'ПРОСМОТР СПИСКА'", 10);
+        this.waitForElementAndClick(bookmarkBtn, "Cannot find bookmark element", 10);
+        this.waitForElementAndClick(addToListBtn, "Cannot find 'ДОБАВИТЬ В СПИСОК'", 10);
+        this.waitForElementAndClick(getElementByText(nameOfFolder, allElements), "Cannot find text field for list name", 10);
+        this.waitForElementAndClick(viewMyList, "Cannot find 'ПРОСМОТР СПИСКА'", 10);
     }
-
-
-
 }

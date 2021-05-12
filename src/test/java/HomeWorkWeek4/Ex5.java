@@ -8,13 +8,6 @@ import org.openqa.selenium.By;
 
 public class Ex5 extends CoreTestCase {
 
-    private MainPageObject mainPageObject;
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        mainPageObject = new MainPageObject(driver);
-    }
-
     @Test
     public void testDeleteArticleBySwipe() {
         //Инициализация необходимых параметров
@@ -25,7 +18,6 @@ public class Ex5 extends CoreTestCase {
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
         NavigationUI navigationUI = new NavigationUI(driver);
         //Поиск статьи и переход к ней
-        searchPageObject.skipWelcomePage();
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
         searchPageObject.waitForSearchResultAndClick("язык программирования");
@@ -46,3 +38,4 @@ public class Ex5 extends CoreTestCase {
         Assert.assertEquals(expectedResult, actualResult);
     }
 }
+

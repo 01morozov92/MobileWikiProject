@@ -11,18 +11,18 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HomeWorkWeek3Ex3 extends CoreTestCase{
 
     @Test
     public void testSearchCancel(){
         SearchPageObject searchPageObject = new SearchPageObject(driver);
-        searchPageObject.skipWelcomePage();
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
         Assert.assertTrue("Cannot find search results", searchPageObject.checkVisionOfALlSearchResults());
         List<MobileElement> searchResultBefore = searchPageObject.getListOfArticles("Java");
-        Assert.assertTrue("Search result is empty", searchResultBefore.size() > 1);
+        Assert.assertTrue("Search result is empty", searchResultBefore.size() > 0);
         searchPageObject.closeSearchField();
         Assert.assertTrue("Search result is still present", searchPageObject.waitForSearchResult("Java"));
         List<MobileElement> searchResultAfter = searchPageObject.getListOfArticles("Java");

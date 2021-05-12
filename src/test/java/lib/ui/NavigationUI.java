@@ -2,12 +2,14 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
-import org.openqa.selenium.By;
+import io.appium.java_client.pagefactory.AndroidFindBy;
+import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 
 public class NavigationUI extends MainPageObject{
 
-    private  static final String
-    SAVED_LISTS = "xpath://*[@text='Сохранено']";
+    @AndroidFindBy(xpath = "//*[@text='Сохранено']")
+    @iOSXCUITFindBy(id = "")
+    MobileElement savedList;
 
     public NavigationUI(AppiumDriver<MobileElement> driver){
         super(driver);
@@ -18,6 +20,6 @@ public class NavigationUI extends MainPageObject{
     }
 
     public void clickSavedList(){
-        this.waitForElementAndClick((SAVED_LISTS), "Cannot find", 5);
+        this.waitForElementAndClick(savedList, "Cannot find", 5);
     }
 }
