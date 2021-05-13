@@ -1,4 +1,4 @@
-package HomeWorkWeek3;
+package HomeWorks.HomeWorkWeek3;
 
 import io.appium.java_client.MobileElement;
 import lib.CoreTestCase;

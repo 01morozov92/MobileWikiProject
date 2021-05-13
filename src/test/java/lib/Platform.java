@@ -19,7 +19,7 @@ public class Platform {
 
     private static Platform instance;
 
-    private Platform() {
+    public Platform() {
     }
 
     public static Platform getInstance() {
@@ -30,20 +30,20 @@ public class Platform {
     }
 
     public String getPlatform() throws Exception {
-        if (this.isAndroid()) {
+        if (isAndroid()) {
             return PLATFORM_ANDROID;
-        } else if (this.isIOS()) {
+        } else if (isIOS()) {
             return PLATFORM_IOS;
         } else {
             throw new Exception("Cannot detect type of the Driver. Platform value " + this.getPlatformVar());
         }
     }
 
-    public boolean isAndroid() {
+    public static boolean isAndroid() {
         return isPlatform(PLATFORM_ANDROID);
     }
 
-    public boolean isIOS() {
+    public static boolean isIOS() {
         return isPlatform(PLATFORM_IOS);
     }
 
@@ -51,16 +51,16 @@ public class Platform {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(MobileCapabilityType.APP, new File(readProperty("app.android.path")).getAbsolutePath());
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, readProperty("device.android.name"));
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, readProperty("platform.android.version"));
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
-        capabilities.setCapability(MobileCapabilityType.PLATFORM, MobilePlatform.ANDROID);
         capabilities.setCapability("orientation", "PORTRAIT");
         capabilities.setCapability("udid", "emulator-5554");
         capabilities.setCapability("avd", "Pixel_3a_API_30_x86");
-        capabilities.setCapability("platformVersion", "11.0");
         capabilities.setCapability("automationName", "Appium");
         capabilities.setCapability("uiautomator2ServerInstallTimeout", "200000");
         capabilities.setCapability(MobileCapabilityType.LOCALE, "RU");
-        capabilities.setCapability(MobileCapabilityType.LANGUAGE, "ru");;
+        capabilities.setCapability(MobileCapabilityType.LANGUAGE, "ru");
+        ;
         capabilities.setCapability("appPackage", "org.wikipedia");
         capabilities.setCapability("appActivity", "main.MainActivity");
         return capabilities;
@@ -72,16 +72,15 @@ public class Platform {
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, readProperty("device.ios.name"));
         capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, readProperty("platform.ios.version"));
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.IOS);
-        capabilities.setCapability(MobileCapabilityType.PLATFORM, MobilePlatform.IOS);
         return capabilities;
     }
 
-    private boolean isPlatform(String my_platform) {
-        String platform = this.getPlatformVar();
+    private static boolean isPlatform(String my_platform) {
+        String platform = getPlatformVar();
         return my_platform.equals(platform);
     }
 
-    private String getPlatformVar() {
+    private static String getPlatformVar() {
         return System.getenv("PLATFORM");
     }
 
@@ -90,7 +89,7 @@ public class Platform {
         String value = null;
         try {
             prop = new Properties();
-            prop.load(new FileInputStream(new File("config.properties")));
+            prop.load(new FileInputStream(new File("src/test/resources/config.properties")));
 
             value = prop.getProperty(property);
 
@@ -118,7 +117,7 @@ public class Platform {
                 String completeURL = "http://" + readProperty("run.ip.ios") + ":" + readProperty("run.port") + "/wd/hub";
                 getIOSDesiredCapabilities();
 
-                if ( Boolean.parseBoolean(readProperty("platform.ios.xcode8"))) {
+                if (Boolean.parseBoolean(readProperty("platform.ios.xcode8"))) {
                     capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
                 }
 

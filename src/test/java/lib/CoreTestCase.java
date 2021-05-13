@@ -38,9 +38,8 @@ public class CoreTestCase extends TestCase {
         driver.runAppInBackground(Duration.ofSeconds(seconds));
     }
 
-    private void skipWelcomePage()
-    {
-        if(lib.Platform.getInstance().isIOS()) {
+    private void skipWelcomePage() {
+        if (lib.Platform.getInstance().isIOS()) {
             WelcomePageObject welcomePageObject = new WelcomePageObject(driver);
             welcomePageObject.clickSkip();
         } else {

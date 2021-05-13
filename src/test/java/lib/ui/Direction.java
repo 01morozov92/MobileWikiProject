@@ -1,4 +1,4 @@
-package HomeWorkWeek4;
+package lib.ui;
 
 public enum Direction {
     вправо("Right"),

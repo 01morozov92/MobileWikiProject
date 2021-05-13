@@ -1,6 +1,5 @@
 package lib.ui;
 
-import HomeWorkWeek4.Direction;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
@@ -10,6 +9,7 @@ import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.ElementOption;
 import io.appium.java_client.touch.offset.PointOption;
+import lombok.extern.log4j.Log4j2;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import static junit.framework.TestCase.fail;
 
+@Log4j2
 public class MainPageObject {
 
     protected AppiumDriver<?> driver;
@@ -60,7 +61,7 @@ public class MainPageObject {
                 successfulClick = true;
             } catch (StaleElementReferenceException se) {
                 numberOfRetry++;
-                System.out.println(String.format("Failed to click on element %s due to the StaleElementReferenceException", locator));
+                log.info(String.format("Failed to click on element %s due to the StaleElementReferenceException", locator));
                 if (numberOfRetry == 3) {
                     se.printStackTrace();
                     fail(String.format("Cannot click on element %s due to the StaleElementReferenceException", locator));
@@ -79,7 +80,7 @@ public class MainPageObject {
                 successfulClick = true;
             } catch (StaleElementReferenceException se) {
                 numberOfRetry++;
-                System.out.println(String.format("Failed to click on element %s due to the StaleElementReferenceException", locator));
+                log.info(String.format("Failed to click on element %s due to the StaleElementReferenceException", locator));
                 if (numberOfRetry == 3) {
                     se.printStackTrace();
                     fail(String.format("Cannot click on element %s due to the StaleElementReferenceException", locator));
@@ -87,6 +88,35 @@ public class MainPageObject {
             }
         } while (!successfulClick);
     }
+
+    public MobileElement getElementByText(String text, List<MobileElement> searchResultsByTitle) {
+        int numberOfRetry = 0;
+        boolean successfulClick = false;
+        if (searchResultsByTitle.size() == 0) {
+            log.info((String.format("Search results with text: %s is not present ", text)));
+            return emptyElemForReturn;
+        }
+        do {
+            try {
+                for (MobileElement mobileElement : searchResultsByTitle) {
+                    if (mobileElement.getText().equalsIgnoreCase(text)) {
+                        return mobileElement;
+                    }
+                }
+                successfulClick = true;
+            } catch (StaleElementReferenceException sre) {
+                numberOfRetry++;
+                log.info(String.format("Failed to find element due to the StaleElementReferenceException"));
+                if (numberOfRetry == 3) {
+                    sre.printStackTrace();
+                    successfulClick = true;
+                    fail(String.format("Cannot find element due to the StaleElementReferenceException"));
+                }
+            }
+        } while (!successfulClick);
+        throw new Error("Cannot find article with title: " + text);
+    }
+
 
     public MobileElement waitForElementPresent(MobileElement locator, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -112,18 +142,6 @@ public class MainPageObject {
         }
     }
 
-    public static MobileElement getElementByText(String text, List<MobileElement> searchResultsByTitle) {
-        if (searchResultsByTitle.size() == 0) {
-            System.out.println((String.format("Search results with text: %s is not present ", text)));
-            return emptyElemForReturn;
-        }
-        for (MobileElement mobileElement : searchResultsByTitle) {
-            if (mobileElement.getText().equals(text)) {
-                return mobileElement;
-            }
-        }
-        throw new Error("Cannot find article with title: " + text);
-    }
 
     public boolean exist(WebElement element) {
         int j = 0;
@@ -135,14 +153,14 @@ public class MainPageObject {
                 webElementPassed = true;
             } catch (TimeoutException | NoSuchElementException e) {
                 e.printStackTrace();
-                System.out.println(String.format("Элемент: %s не найден", element));
+                log.info(String.format("Элемент: %s не найден", element));
                 return false;
             } catch (StaleElementReferenceException ex) {
-                System.out.println("Ошибка при поиске элемента " + element);
+                log.info("Ошибка при поиске элемента " + element);
                 j += 1;
                 if (j == 5) {
                     ex.printStackTrace();
-                    System.out.println(String.format("Элемент: %s принял другое состояние", element));
+                    log.info(String.format("Элемент: %s принял другое состояние", element));
                     Assert.fail("Элемент принял другое состояние");
                     return false;
                 }
@@ -241,7 +259,7 @@ public class MainPageObject {
                 }
             } catch (StaleElementReferenceException se) {
                 numberOfTry++;
-                System.out.println("Failed to swipe due to StaleElementReferenceException");
+                log.info("Failed to swipe due to StaleElementReferenceException");
                 if (numberOfTry == 3) {
                     se.printStackTrace();
                     fail("Cannot swipe due to StaleElementReferenceException");

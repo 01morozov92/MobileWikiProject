@@ -1,4 +1,4 @@
-package HomeWorkWeek5;
+package HomeWorks.HomeWorkWeek5;
 
 import lib.CoreTestCase;
 import lib.ui.SearchPageObject;
@@ -7,9 +7,8 @@ import org.junit.Test;
 public class Ex9 extends CoreTestCase {
 
     @Test
-    public void testCheckArticlesByTitleAndDescription(){
+    public void testCheckArticlesByTitleAndDescription() {
         SearchPageObject searchPageObject = new SearchPageObject(driver);
-        searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Android");
         searchPageObject.waitForElementByTitleAndDescription
                 ("Android Studio", "среда разработки для Android");

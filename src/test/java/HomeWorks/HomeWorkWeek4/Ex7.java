@@ -1,4 +1,4 @@
-package HomeWorkWeek4;
+package HomeWorks.HomeWorkWeek4;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
@@ -8,7 +8,10 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.ScreenOrientation;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -60,20 +63,20 @@ public class Ex7 {
     }
 
     @Test
-    public void checkScreenOrientation(){
+    public void checkScreenOrientation() {
         waitForElementAndClick(By.xpath("//*[@text='ПРОПУСТИТЬ']"), "Cannot click skip button", 5);
         int sizeWidth = driver.manage().window().getSize().getWidth();
-        if (sizeWidth > 1080){
+        if (sizeWidth > 1080) {
             fail("Screen orientation did not return to its original state");
         }
     }
 
-    public void assertElementPresent(String expectedResult, By by){
+    public void assertElementPresent(String expectedResult, By by) {
         String actualResult = null;
-        try{
+        try {
             MobileElement element = driver.findElement(by);
             actualResult = element.getText();
-        } catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             e.printStackTrace();
             fail(String.format("Element %s not found", by));
         }

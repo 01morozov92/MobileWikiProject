@@ -1,14 +1,16 @@
-package iOS;
+package Tests;
 
 import lib.CoreTestCase;
 import lib.ui.WelcomePageObject;
 import org.junit.Test;
 
+@Deprecated
 public class GetStartedTest extends CoreTestCase {
 
+
+    //Для запуска данного теста надо убрать строчку this.skipWelcomePage(); в CoreTestCase.java
     @Test
-    public void testPassThroughWelcomeTest()
-    {
+    public void testPassThroughWelcomeTest() {
         if (lib.Platform.getInstance().isAndroid()) {
             return;
         }
