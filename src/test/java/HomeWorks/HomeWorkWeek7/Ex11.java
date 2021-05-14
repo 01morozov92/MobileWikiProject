@@ -6,7 +6,7 @@ import lib.ui.MyListsPageObject;
 import lib.ui.NavigationUI;
 import lib.ui.SearchPageObject;
 import org.junit.Assert;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 public class Ex11 extends CoreTestCase {
 

@@ -7,6 +7,7 @@ import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebElement;
+import org.testng.annotations.Parameters;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,15 +48,23 @@ public class Platform {
         return isPlatform(PLATFORM_IOS);
     }
 
-    private DesiredCapabilities getAndroidDesiredCapabilities() {
+    private DesiredCapabilities getAndroidDesiredCapabilities(String platform, String udid, String platformVersion, String avd) {
         DesiredCapabilities capabilities = new DesiredCapabilities();
+
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, platform);
+        capabilities.setCapability("udid", udid); //имя используемого эмулятора
+        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, platformVersion);
+        capabilities.setCapability("avd", avd); //для запуска эмулятора из теста
+        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "pixel64"); //имя устройства
+
+
         capabilities.setCapability(MobileCapabilityType.APP, new File(readProperty("app.android.path")).getAbsolutePath());
-        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, readProperty("device.android.name"));
-        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, readProperty("platform.android.version"));
-        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
+//        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, readProperty("device.android.name"));
+//        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, readProperty("platform.android.version"));
+//        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
         capabilities.setCapability("orientation", "PORTRAIT");
-        capabilities.setCapability("udid", "emulator-5556");
-        capabilities.setCapability("avd", "pixel64");
+//        capabilities.setCapability("udid", "emulator-5556");
+//        capabilities.setCapability("avd", "pixel64");
         capabilities.setCapability("automationName", "Appium");
         capabilities.setCapability("uiautomator2ServerInstallTimeout", "200000");
         capabilities.setCapability(MobileCapabilityType.LOCALE, "RU");
@@ -104,7 +113,7 @@ public class Platform {
         return value;
     }
 
-    public AppiumDriver<?> getDriver() throws Exception {
+    public AppiumDriver<?> getDriver(String platform, String udid, String platformVersion, String avd) throws Exception {
         AppiumDriver<?> driver;
         DesiredCapabilities capabilities = new DesiredCapabilities();
         if (Boolean.parseBoolean(readProperty("run.hybrid"))) {
@@ -126,9 +135,9 @@ public class Platform {
 
             case "android":
                 completeURL = "http://" + readProperty("run.ip.android") + ":" + readProperty("run.port") + "/wd/hub";
-                getAndroidDesiredCapabilities();
+                getAndroidDesiredCapabilities(platform, udid, platformVersion, avd);
 
-                driver = new AndroidDriver(new URL(completeURL), getAndroidDesiredCapabilities());
+                driver = new AndroidDriver(new URL(completeURL), getAndroidDesiredCapabilities(platform, udid, platformVersion, avd));
                 break;
 
             default:
