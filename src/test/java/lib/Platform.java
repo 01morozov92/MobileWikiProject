@@ -54,8 +54,8 @@ public class Platform {
         capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, readProperty("platform.android.version"));
         capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
         capabilities.setCapability("orientation", "PORTRAIT");
-        capabilities.setCapability("udid", "emulator-5554");
-        capabilities.setCapability("avd", "Pixel_3a_API_30_x86");
+        capabilities.setCapability("udid", "emulator-5556");
+        capabilities.setCapability("avd", "pixel64");
         capabilities.setCapability("automationName", "Appium");
         capabilities.setCapability("uiautomator2ServerInstallTimeout", "200000");
         capabilities.setCapability(MobileCapabilityType.LOCALE, "RU");
@@ -111,7 +111,7 @@ public class Platform {
             capabilities.setCapability(MobileCapabilityType.AUTO_WEBVIEW, true);
         }
 
-        switch (getPlatform().toLowerCase()) {
+        switch ("android") {//getPlatform().toLowerCase()
 
             case "ios":
                 String completeURL = "http://" + readProperty("run.ip.ios") + ":" + readProperty("run.port") + "/wd/hub";
