@@ -2,18 +2,18 @@
 
 <suite name="Suite" parallel="tests" thread-count="3">
 
-    <test name="Android emulator 1">
-        <parameter name="avd" value="pixel64"/>
-        <parameter name="platform" value="android"/>
-        <parameter name="udid" value="emulator-5554"/>
-        <parameter name="platformVersion" value="9"/>
-        <classes>
-            <class name="HomeWorks.HomeWorkWeek7.Ex12"/>
-        </classes>
-    </test>
+        <test name="Android emulator 1">
+            <parameter name="avd" value="Copy_of_pixel64"/>
+            <parameter name="platform" value="android"/>
+            <parameter name="udid" value="emulator-5554"/>
+            <parameter name="platformVersion" value="9"/>
+            <classes>
+                <class name="HomeWorks.HomeWorkWeek7.Ex12"/>
+            </classes>
+        </test>
 
     <test name="Android emulator 2">
-        <parameter name="avd" value="pixel64copy"/>
+        <parameter name="avd" value="pixel64"/>
         <parameter name="platform" value="android"/>
         <parameter name="udid" value="emulator-5556"/>
         <parameter name="platformVersion" value="9"/>

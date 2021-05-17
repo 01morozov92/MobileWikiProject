@@ -1,10 +1,14 @@
 package lib;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import io.appium.java_client.remote.MobilePlatform;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.testng.annotations.Parameters;
@@ -56,20 +60,12 @@ public class Platform {
         capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, platformVersion);
         capabilities.setCapability("avd", avd); //для запуска эмулятора из теста
         capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "pixel64"); //имя устройства
-
-
         capabilities.setCapability(MobileCapabilityType.APP, new File(readProperty("app.android.path")).getAbsolutePath());
-//        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, readProperty("device.android.name"));
-//        capabilities.setCapability(MobileCapabilityType.PLATFORM_VERSION, readProperty("platform.android.version"));
-//        capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, MobilePlatform.ANDROID);
         capabilities.setCapability("orientation", "PORTRAIT");
-//        capabilities.setCapability("udid", "emulator-5556");
-//        capabilities.setCapability("avd", "pixel64");
         capabilities.setCapability("automationName", "Appium");
-        capabilities.setCapability("uiautomator2ServerInstallTimeout", "200000");
+        capabilities.setCapability("uiautomator2ServerInstallTimeout", "300000");
         capabilities.setCapability(MobileCapabilityType.LOCALE, "RU");
         capabilities.setCapability(MobileCapabilityType.LANGUAGE, "ru");
-        ;
         capabilities.setCapability("appPackage", "org.wikipedia");
         capabilities.setCapability("appActivity", "main.MainActivity");
         return capabilities;
@@ -130,14 +126,16 @@ public class Platform {
                     capabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
                 }
 
-                driver = new IOSDriver<RemoteWebElement>(new URL(completeURL), getIOSDesiredCapabilities());
+                driver = new IOSDriver<MobileElement>(new URL(completeURL), getIOSDesiredCapabilities());
                 break;
 
             case "android":
                 completeURL = "http://" + readProperty("run.ip.android") + ":" + readProperty("run.port") + "/wd/hub";
                 getAndroidDesiredCapabilities(platform, udid, platformVersion, avd);
 
-                driver = new AndroidDriver(new URL(completeURL), getAndroidDesiredCapabilities(platform, udid, platformVersion, avd));
+                startServer();
+
+                driver = new AndroidDriver<MobileElement>(new URL(completeURL), getAndroidDesiredCapabilities(platform, udid, platformVersion, avd));
                 break;
 
             default:
@@ -145,5 +143,28 @@ public class Platform {
         }
 
         return driver;
+    }
+
+    AppiumDriverLocalService service;
+
+    public void startServer() {
+        AppiumServiceBuilder builder = new AppiumServiceBuilder();
+        if (isIOS()) {
+            builder.withAppiumJS(new File("C:\\Users\\user\\AppData\\Local\\Programs\\Appium\\resources\\app\\node_modules\\appium\\build\\lib\\main.js"));
+        } else {
+            builder.withAppiumJS(new File("C:\\Users\\user\\AppData\\Local\\Programs\\Appium\\resources\\app\\node_modules\\appium\\build\\lib\\main.js"));
+        }
+        builder.withIPAddress("127.0.0.1");
+        builder.usingPort(4723);
+        builder.withArgument(GeneralServerFlag.SESSION_OVERRIDE);
+        builder.withArgument(GeneralServerFlag.LOG_LEVEL, "error");
+
+        //Start the server with the builder
+        service = AppiumDriverLocalService.buildService(builder);
+        service.start();
+    }
+
+    public void stopServer() {
+        service.stop();
     }
 }
