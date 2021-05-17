@@ -120,7 +120,7 @@ public class Platform {
             capabilities.setCapability(MobileCapabilityType.AUTO_WEBVIEW, true);
         }
 
-        switch ("android") {//getPlatform().toLowerCase()
+        switch (getPlatform().toLowerCase()) {//getPlatform().toLowerCase()
 
             case "ios":
                 String completeURL = "http://" + readProperty("run.ip.ios") + ":" + readProperty("run.port") + "/wd/hub";
