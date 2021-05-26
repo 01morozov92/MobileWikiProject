@@ -1,9 +1,10 @@
-package lib.ui;
+package lib.uiMobile;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import static lib.Platform.isIOS;
 
@@ -38,7 +39,7 @@ public class ArticlePageObject extends MainPageObject {
     MobileElement savedBtn;
 
 
-    public ArticlePageObject(AppiumDriver<MobileElement> driver) {
+    public ArticlePageObject(RemoteWebDriver driver) {
         super(driver);
     }
 

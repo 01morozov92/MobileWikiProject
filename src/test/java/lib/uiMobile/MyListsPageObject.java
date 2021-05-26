@@ -1,9 +1,9 @@
-package lib.ui;
+package lib.uiMobile;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.time.Duration;
 
@@ -16,7 +16,7 @@ public class MyListsPageObject extends MainPageObject {
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeButton[@name='swipe action delete']")
     public MobileElement delete;
 
-    public MyListsPageObject(AppiumDriver<MobileElement> driver) {
+    public MyListsPageObject(RemoteWebDriver driver) {
         super(driver);
     }
 

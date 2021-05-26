@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite" parallel="tests" thread-count="3">
+
+    <test name="Web">
+        <parameter name="avd" value="pixel64"/>
+        <parameter name="platform" value="android"/>
+        <parameter name="udid" value="emulator-5556"/>
+        <parameter name="platformVersion" value="9"/>
+        <classes>
+            <class name="HomeWorks.HomeWorkWeek7.Ex15"/>
+        </classes>
+    </test>
+
+</suite>

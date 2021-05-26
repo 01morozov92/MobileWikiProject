@@ -1,15 +1,17 @@
-package lib.ui;
+package lib.uiMobile;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static junit.framework.TestCase.fail;
 import static lib.Platform.isIOS;
 
 @Log4j2
@@ -23,9 +25,15 @@ public class SearchPageObject extends MainPageObject {
     @iOSXCUITFindBy(id = "Empty")
     MobileElement searchResultByTitle;
 
+    @FindBy(id = "searchIcon")
     @AndroidFindBy(xpath = "//*[contains(@text, 'Поиск')]")
     @iOSXCUITFindBy(id = "Поиск по Википедии")
     MobileElement searchInitElement;
+
+    @FindBy(id = "searchIcon")
+    @AndroidFindBy(xpath = "//*[contains(@text, 'Поиск')]")
+    @iOSXCUITFindBy(id = "Поиск по Википедии")
+    MobileElement searchInitElement1;
 
     @AndroidFindBy(xpath = "//*[@resource-id='org.wikipedia:id/search_src_text']")
     @iOSXCUITFindBy(xpath = "//*[@name='Википедия']")
@@ -58,7 +66,7 @@ public class SearchPageObject extends MainPageObject {
             ARTICLE_TITLE_IOS = "//XCUIElementTypeStaticText[1]",
             ARTICLE_DESCRIPTION_IOS = "//XCUIElementTypeStaticText[2]";
 
-    public SearchPageObject(AppiumDriver<MobileElement> driver) {
+    public SearchPageObject(RemoteWebDriver driver) {
         super(driver);
     }
 

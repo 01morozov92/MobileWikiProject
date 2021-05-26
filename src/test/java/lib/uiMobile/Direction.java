@@ -1,4 +1,4 @@
-package lib.ui;
+package lib.uiMobile;
 
 public enum Direction {
     вправо("Right"),

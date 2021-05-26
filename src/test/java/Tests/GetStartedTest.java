@@ -1,7 +1,7 @@
 package Tests;
 
 import lib.CoreTestCase;
-import lib.ui.WelcomePageObject;
+import lib.uiMobile.WelcomePageObject;
 import org.junit.Test;
 
 @Deprecated

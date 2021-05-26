@@ -1,10 +1,10 @@
 package HomeWorks.HomeWorkWeek4;
 
 import lib.CoreTestCase;
-import lib.ui.ArticlePageObject;
-import lib.ui.MyListsPageObject;
-import lib.ui.NavigationUI;
-import lib.ui.SearchPageObject;
+import lib.uiMobile.ArticlePageObject;
+import lib.uiMobile.MyListsPageObject;
+import lib.uiMobile.NavigationUI;
+import lib.uiMobile.SearchPageObject;
 import org.junit.Assert;
 import org.junit.Test;
 

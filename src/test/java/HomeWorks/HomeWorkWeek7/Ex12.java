@@ -1,7 +1,7 @@
 package HomeWorks.HomeWorkWeek7;
 
 import lib.CoreTestCase;
-import lib.ui.SearchPageObject;
+import lib.uiMobile.SearchPageObject;
 import org.testng.annotations.Test;
 
 public class Ex12 extends CoreTestCase {

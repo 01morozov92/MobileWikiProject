@@ -1,9 +1,9 @@
-package lib.ui;
+package lib.uiMobile;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import static lib.Platform.isIOS;
 
@@ -18,7 +18,7 @@ public class NavigationUI extends MainPageObject {
     MobileElement back;
 
 
-    public NavigationUI(AppiumDriver<MobileElement> driver) {
+    public NavigationUI(RemoteWebDriver driver) {
         super(driver);
     }
 

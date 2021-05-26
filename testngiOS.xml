@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Suite" parallel="tests" thread-count="3">
+
+    <test name="iOS emulator 1">
+        <parameter name="avd" value="iPhone 8"/>
+        <parameter name="platform" value="ios"/>
+        <parameter name="udid" value="iPhone 8"/>
+        <parameter name="platformVersion" value="14.5"/>
+        <classes>
+            <class name="HomeWorks.HomeWorkWeek7.Ex12"/>
+        </classes>
+    </test>
+
+</suite>

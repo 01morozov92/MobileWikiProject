@@ -2,7 +2,6 @@ package HomeWorks.HomeWorkWeek4;
 
 import io.appium.java_client.MobileElement;
 import lib.CoreTestCase;
-import lib.ui.SearchPageObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -12,12 +11,12 @@ public class Ex6 extends CoreTestCase {
 
     @Test
     public void testDeleteArticleBySwipeTest() {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
-        searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        searchPageObject.waitForSearchResultAndClick("язык программирования");
-        ;
-        assertElementPresent("Java", By.xpath("//*[@text='Java']"));
+//        SearchPageObject searchPageObject = new SearchPageObject(driver);
+//        searchPageObject.initSearchInput();
+//        searchPageObject.typeSearchLine("Java");
+//        searchPageObject.waitForSearchResultAndClick("язык программирования");
+//        ;
+//        assertElementPresent("Java", By.xpath("//*[@text='Java']"));
     }
 
 

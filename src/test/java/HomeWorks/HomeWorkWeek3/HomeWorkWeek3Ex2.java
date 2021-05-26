@@ -28,8 +28,8 @@ public class HomeWorkWeek3Ex2 {
 
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("deviceName", "AndroidTestDevice");
-        capabilities.setCapability("udid", "emulator-5554");
-        capabilities.setCapability("avd", "Pixel_3a_API_30_x86");
+//        capabilities.setCapability("udid", "emulator-5554");
+//        capabilities.setCapability("avd", "Pixel_3a_API_30_x86");
         capabilities.setCapability("platformVersion", "11.0");
         capabilities.setCapability("automationName", "Appium");
         capabilities.setCapability("adbExecTimeout", "200000");
