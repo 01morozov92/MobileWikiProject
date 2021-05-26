@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static lib.Platform.*;
-import static org.testng.Assert.fail;
+
 
 @Log4j2
 public class SearchPageObject extends MainPageObject {
@@ -36,6 +36,7 @@ public class SearchPageObject extends MainPageObject {
     @iOSXCUITFindBy(xpath = "//*[@name='Википедия']")
     WebElement searchInput;
 
+    @FindBy(xpath = "//*[contains(@class, 'page-summary')]")
     @AndroidFindBy(xpath = "//*[@resource-id='org.wikipedia:id/search_results_list']//*[@class='android.view.ViewGroup']")
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeCollectionView/XCUIElementTypeCell")
     List<WebElement> searchResults;
@@ -56,6 +57,12 @@ public class SearchPageObject extends MainPageObject {
     @iOSXCUITFindBy(id = "clear mini")
     WebElement clearSearchInput;
 
+    @FindBy(xpath = "//h3[text()]")
+    List<WebElement> titleWeb;
+
+    @FindBy(xpath = "wikidata-description")
+    List<WebElement> descriptionWeb;
+
 
 //    $$$$$$$
 
@@ -70,14 +77,16 @@ public class SearchPageObject extends MainPageObject {
             ARTICLE_TITLE = "org.wikipedia:id/page_list_item_title",
             ARTICLE_DESCRIPTION = "org.wikipedia:id/page_list_item_description",
             ARTICLE_TITLE_IOS = "//XCUIElementTypeStaticText[1]",
-            ARTICLE_DESCRIPTION_IOS = "//XCUIElementTypeStaticText[2]";
+            ARTICLE_DESCRIPTION_IOS = "//XCUIElementTypeStaticText[2]",
+            ARTICLE_TITLE_WEB = "a/h3",
+            ARTICLE_DESCRIPTION_WEB = "a/div[@class='wikidata-description']";
 
     public SearchPageObject(RemoteWebDriver driver) {
         super(driver);
     }
 
     public WebElement waitForElementByTitleAndDescription(String title, String description) {
-        WebElement elementByArticleAndDescription = null;
+
         if (isIOS()) {
             for (int i = 0; i < searchResults.size() - 1; i++) {
                 String articleTitle = waitForElementPresent(searchResults.get(i).findElement(By.xpath(ARTICLE_TITLE_IOS)), "Cannot find element title", 10).getText();
@@ -85,19 +94,29 @@ public class SearchPageObject extends MainPageObject {
                 String articleDescription = waitForElementPresent(searchResults.get(i).findElement((By.xpath(ARTICLE_DESCRIPTION_IOS))), "Cannot find element description", 10).getText();
                 log.info(articleDescription);
                 if (articleTitle.equalsIgnoreCase(title) && articleDescription.equalsIgnoreCase(description)) {
-                    return elementByArticleAndDescription = this.waitForElementPresent(searchResults.get(i), String.format("Cannot find element with title: %s and with description: %s", title, description), 10);
+                    return this.waitForElementPresent(searchResults.get(i), String.format("Cannot find element with title: %s and with description: %s", title, description), 10);
                 }
             }
-        } else {
+        } else if(isAndroid()) {
             for (int i = 0; i < searchResults.size() - 1; i++) {
                 String articleTitle = waitForElementPresent(searchResults.get(i).findElement(By.id(ARTICLE_TITLE)), "Cannot find element title", 10).getText();
                 String articleDescription = waitForElementPresent(searchResults.get(i).findElement((By.id(ARTICLE_DESCRIPTION))), "Cannot find element description", 10).getText();
                 if (articleTitle.equals(title) && articleDescription.equals(description)) {
-                    return elementByArticleAndDescription = this.waitForElementPresent(searchResults.get(i), String.format("Cannot find element with title: %s and with description: %s", title, description), 10);
+                    return this.waitForElementPresent(searchResults.get(i), String.format("Cannot find element with title: %s and with description: %s", title, description), 10);
+                }
+            }
+        } else if(isWeb()){
+            for (int i = 0; i < searchResults.size() - 1; i++) {
+                String articleTitle = waitForElementPresent(searchResults.get(i).findElement(By.xpath(ARTICLE_TITLE_WEB)), "Cannot find element title", 10).getText();
+                log.info(articleTitle);
+                String articleDescription = waitForElementPresent(searchResults.get(i).findElement((By.xpath(ARTICLE_DESCRIPTION_WEB))), "Cannot find element description", 10).getText();
+                log.info(articleDescription);
+                if (articleTitle.equals(title) && articleDescription.equals(description)) {
+                    return this.waitForElementPresent(searchResults.get(i), String.format("Cannot find element with title: %s and with description: %s", title, description), 10);
                 }
             }
         }
-        return elementByArticleAndDescription;
+        throw new Error(String.format("Cannot find element with title: %s and with description: %s", title, description));
     }
 
     public boolean checkVisionOfALlSearchResults() {
