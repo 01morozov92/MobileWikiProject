@@ -1,6 +1,5 @@
 package lib;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
@@ -9,15 +8,15 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.Test;
 
-import javax.swing.text.Utilities;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
@@ -50,7 +49,7 @@ public class Platform {
             return PLATFORM_ANDROID;
         } else if (isIOS()) {
             return PLATFORM_IOS;
-        } else if(isWeb()) {
+        } else if (isWeb()) {
             return PLATFORM_WEB;
         } else {
             throw new Exception("Cannot detect type of the Driver. Platform value " + this.getPlatformVar());
@@ -104,7 +103,7 @@ public class Platform {
         return capabilities;
     }
 
-    private ChromeOptions getWebChromeOptions(){
+    private ChromeOptions getWebChromeOptions() {
         Map<String, Object> deviseMetrics = new HashMap<String, Object>();
         deviseMetrics.put("width", 360);
         deviseMetrics.put("height", 640);
@@ -224,20 +223,20 @@ public class Platform {
 
     public void AppiumServer() {
         this.serviceBuilder.withAppiumJS(new File("C:\\Users\\user\\AppData\\Local\\Programs\\Appium\\resources\\app\\node_modules\\appium\\build\\lib\\main.js"));
-        this.serviceBuilder. usingAnyFreePort();
+        this.serviceBuilder.usingAnyFreePort();
         this.serviceBuilder.withArgument(GeneralServerFlag.SESSION_OVERRIDE);
 //        this.serviceBuilder.withIPAddress("127.0.0.1");
         this.serviceBuilder.withArgument(GeneralServerFlag.LOG_LEVEL, "error");
-        this.server = AppiumDriverLocalService.buildService(serviceBuilder);
-        this.server.start();
+        server = AppiumDriverLocalService.buildService(serviceBuilder);
+        server.start();
     }
 
     public void stopServer() {
-        this.server.stop();
+        server.stop();
     }
 
-    public AppiumDriverLocalService get() {
-        return this.server;
+    public static AppiumDriverLocalService get() {
+        return server;
     }
 
     public static int getAvailablePort() {

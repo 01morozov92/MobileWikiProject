@@ -1,39 +1,40 @@
 package lib.uiMobile;
 
-import io.appium.java_client.MobileElement;
+
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class WelcomePageObject extends MainPageObject {
 
     @AndroidFindBy(xpath = "//*[@text='ПРОПУСТИТЬ']")
     @iOSXCUITFindBy(id = "Пропустить")
-    MobileElement skipBtn;
+    WebElement skipBtn;
 
     @AndroidFindBy(xpath = "Empty")
     @iOSXCUITFindBy(id = "Узнать подробнее о Википедии")
-    MobileElement learnMoreBtn;
+    WebElement learnMoreBtn;
 
     @AndroidFindBy(xpath = "Empty")
     @iOSXCUITFindBy(id = "Новые способы изучения")
-    MobileElement newWaysToLearn;
+    WebElement newWaysToLearn;
 
     @AndroidFindBy(xpath = "Empty")
     @iOSXCUITFindBy(id = "Искать на почти 300 языках")
-    MobileElement findOn300Language;
+    WebElement findOn300Language;
 
     @AndroidFindBy(xpath = "Empty")
     @iOSXCUITFindBy(id = "Помогите сделать это приложение лучше")
-    MobileElement helpToImproveApp;
+    WebElement helpToImproveApp;
 
     @AndroidFindBy(xpath = "Empty")
     @iOSXCUITFindBy(id = "Далее")
-    MobileElement nextBtn;
+    WebElement nextBtn;
 
     @AndroidFindBy(xpath = "Empty")
     @iOSXCUITFindBy(id = "Начать")
-    MobileElement getStartedBtn;
+    WebElement getStartedBtn;
 
 
     public WelcomePageObject(RemoteWebDriver driver) {

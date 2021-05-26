@@ -3,12 +3,22 @@
 <suite name="Suite" parallel="tests" thread-count="3">
 
     <test name="Web">
-        <parameter name="avd" value="pixel64"/>
-        <parameter name="platform" value="android"/>
-        <parameter name="udid" value="emulator-5556"/>
+        <parameter name="avd" value="Web_Browser"/>
+        <parameter name="platform" value="Web_Browser"/>
+        <parameter name="udid" value="Web_Browser"/>
         <parameter name="platformVersion" value="9"/>
         <classes>
-            <class name="HomeWorks.HomeWorkWeek7.Ex15"/>
+            <class name="HomeWorks.HomeWorkWeek9.Ex17"/>
+        </classes>
+    </test>
+
+    <test name="Web2">
+        <parameter name="avd" value="Web_Browser"/>
+        <parameter name="platform" value="Web_Browser"/>
+        <parameter name="udid" value="Web_Browser"/>
+        <parameter name="platformVersion" value="9"/>
+        <classes>
+            <class name="HomeWorks.HomeWorkWeek9.Ex17"/>
         </classes>
     </test>
 

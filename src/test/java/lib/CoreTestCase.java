@@ -4,14 +4,14 @@ import io.appium.java_client.AppiumDriver;
 import junit.framework.TestCase;
 import lib.uiMobile.WelcomePageObject;
 import lombok.extern.log4j.Log4j2;
+import org.junit.After;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Parameters;
+import org.testng.annotations.*;
 
 import java.time.Duration;
 
+import static java.lang.Thread.sleep;
 import static lib.Platform.isWeb;
 
 @Log4j2
@@ -32,17 +32,25 @@ public class CoreTestCase extends TestCase {
         }
     }
 
-    @AfterTest
+    @AfterSuite
     @Override
     protected void tearDown() throws Exception {
         driver.quit();
         if (!isWeb()) {
-            if (!(Platform == null)) {
+            if (driver == null) {
                 Platform.stopServer();
             }
         }
-        super.tearDown();
     }
+
+//    @AfterSuite()
+//    protected void shutDownServer(){
+//        if (!isWeb()) {
+//            if (driver == null) {
+//                Platform.stopServer();
+//            }
+//        }
+//    }
 
     protected void rotateScreenPortrait() {
         if (driver instanceof AppiumDriver) {
@@ -67,7 +75,7 @@ public class CoreTestCase extends TestCase {
 
     protected void openWikiPageForMobileWeb() throws Exception {
         if (isWeb()) {
-            driver.get("https://en.m.wikipedia.org");
+            driver.get("https://ru.m.wikipedia.org");
         } else {
             log.info("Method openWikiPageForMobileWeb do nothing for platform: " + Platform.getInstance().getPlatform().toLowerCase());
         }

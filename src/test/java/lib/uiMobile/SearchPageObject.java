@@ -1,64 +1,70 @@
 package lib.uiMobile;
 
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import lombok.extern.log4j.Log4j2;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static junit.framework.TestCase.fail;
-import static lib.Platform.isIOS;
+import static lib.Platform.*;
+import static org.testng.Assert.fail;
 
 @Log4j2
 public class SearchPageObject extends MainPageObject {
 
+    @FindBy(className = "page-summary")
     @AndroidFindBy(id = "org.wikipedia:id/page_list_item_title")
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeStaticText")
-    List<MobileElement> searchResultsByTitle;
+    List<WebElement> searchResultsByTitle;
 
     @AndroidFindBy(id = "org.wikipedia:id/page_list_item_title")
     @iOSXCUITFindBy(id = "Empty")
-    MobileElement searchResultByTitle;
+    WebElement searchResultByTitle;
 
     @FindBy(id = "searchIcon")
     @AndroidFindBy(xpath = "//*[contains(@text, 'Поиск')]")
     @iOSXCUITFindBy(id = "Поиск по Википедии")
-    MobileElement searchInitElement;
+    WebElement searchInitElement;
 
-    @FindBy(id = "searchIcon")
-    @AndroidFindBy(xpath = "//*[contains(@text, 'Поиск')]")
-    @iOSXCUITFindBy(id = "Поиск по Википедии")
-    MobileElement searchInitElement1;
-
+    @FindBy(xpath = "//input[@class='search mw-ui-background-icon-search']")
     @AndroidFindBy(xpath = "//*[@resource-id='org.wikipedia:id/search_src_text']")
     @iOSXCUITFindBy(xpath = "//*[@name='Википедия']")
-    MobileElement searchInput;
+    WebElement searchInput;
 
     @AndroidFindBy(xpath = "//*[@resource-id='org.wikipedia:id/search_results_list']//*[@class='android.view.ViewGroup']")
     @iOSXCUITFindBy(xpath = "//XCUIElementTypeCollectionView/XCUIElementTypeCell")
-    List<MobileElement> searchResults;
+    List<WebElement> searchResults;
 
     @AndroidFindBy(id = "org.wikipedia:id/page_list_item_description")
     @iOSXCUITFindBy(id = "Empty")
-    MobileElement searchResultByDescription;
+    WebElement searchResultByDescription;
 
     @AndroidFindBy(id = "org.wikipedia:id/search_close_btn")
     @iOSXCUITFindBy(id = "clear mini")
-    MobileElement closeSearchBtn;
+    WebElement closeSearchBtn;
 
     @AndroidFindBy(xpath = "Empty")
     @iOSXCUITFindBy(id = "Сохранено")
-    MobileElement savedBtn;
+    WebElement savedBtn;
 
     @AndroidFindBy(xpath = "Empty")
     @iOSXCUITFindBy(id = "clear mini")
-    MobileElement clearSearchInput;
+    WebElement clearSearchInput;
 
+
+//    $$$$$$$
+
+    @FindBy(className = "page-summary")
+    List<WebElement> allSearchResults;
+
+    @FindBy(xpath = "//*[text()='AppImage']")
+    WebElement AppImageArticle;
+//    $$$$$$$
 
     private static final String
             ARTICLE_TITLE = "org.wikipedia:id/page_list_item_title",
@@ -70,8 +76,8 @@ public class SearchPageObject extends MainPageObject {
         super(driver);
     }
 
-    public MobileElement waitForElementByTitleAndDescription(String title, String description) {
-        MobileElement elementByArticleAndDescription = null;
+    public WebElement waitForElementByTitleAndDescription(String title, String description) {
+        WebElement elementByArticleAndDescription = null;
         if (isIOS()) {
             for (int i = 0; i < searchResults.size() - 1; i++) {
                 String articleTitle = waitForElementPresent(searchResults.get(i).findElement(By.xpath(ARTICLE_TITLE_IOS)), "Cannot find element title", 10).getText();
@@ -99,8 +105,8 @@ public class SearchPageObject extends MainPageObject {
                 "Cannot find search results").isDisplayed();
     }
 
-    public List<MobileElement> getListOfArticles(String searchPhrase) {
-        List<MobileElement> list;
+    public List<WebElement> getListOfArticles(String searchPhrase) {
+        List<WebElement> list;
         try {
             list = searchResultsByTitle.stream().filter(element -> element.getText().equals(searchPhrase)).collect(Collectors.toList());
         } catch (NullPointerException nex) {
@@ -127,22 +133,49 @@ public class SearchPageObject extends MainPageObject {
                 this.waitForElementAndClick(closeSearchBtn, "Cannot find close search button", 5);
             }
             this.waitForElementAndSendKeys(searchInput, searchLine, "Cannot find search input field", 5);
-        } else {
+        } else if (isAndroid()) {
             if (exist(closeSearchBtn)) {
                 this.waitForElementAndSendKeys(searchInput, searchLine, "Cannot find search input field", 5);
             } else {
                 initSearchInput();
                 this.waitForElementAndSendKeys(searchInput, searchLine, "Cannot find search input field", 5);
             }
+        } else if (isWeb()) {
+            initSearchInput();
+            this.waitForElementAndSendKeys(searchInput, searchLine, "Cannot find search input field", 5);
         }
     }
 
     public void waitForSearchResultAndClick(String substring) {
-        this.waitForElementAndClick(getElementByText(substring, searchResultsByTitle), "Cannot find and click search result with substring " + substring, 5);
+        if (isWeb()) {
+            this.waitForElementAndClick(getElementByPartialText(substring, searchResultsByTitle), "Cannot find and click search result with substring " + substring, 5);
+        } else {
+            this.waitForElementAndClick(getElementByText(substring, searchResultsByTitle), "Cannot find and click search result with substring " + substring, 5);
+        }
     }
 
     public boolean waitForSearchResult(String substring) {
         return this.waitForElementNotPresent(searchResultByTitle, String.format("Cannot find search result by title: %s", substring), 10);
     }
+
+    //    $$$$$$$
+    public void inputText(String text) {
+        this.waitForElementAndSendKeys(searchInput, text, "Cannot find search input field");
+    }
+
+
+    public void clickSearch() {
+        this.waitForElementAndClick(searchInitElement, "", 10);
+    }
+
+    public void chooseArticleByText(String title) {
+        getElementByPartialText(title, allSearchResults).click();
+    }
+
+    public boolean checkArticles() {
+        return waitForElementNotPresent(getElementByPartialText("AppImage", allElements), "Element is still present", 10);
+    }
+
+    //    $$$$$$$
 }
 

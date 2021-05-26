@@ -1,7 +1,6 @@
 package lib.uiMobile;
 
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
@@ -19,6 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.fail;
 
@@ -34,13 +34,13 @@ public class MainPageObject {
 
     @AndroidFindBy(id = "empty")
     @iOSXCUITFindBy(id = "empty")
-    static MobileElement emptyElemForReturn;
+    static public WebElement emptyElemForReturn;
 
     @AndroidFindBy(xpath = "//*")
     @iOSXCUITFindBy(xpath = "//*")
-    static List<MobileElement> allElements;
+    static public List<WebElement> allElements;
 
-    public boolean waitForElementNotPresent(MobileElement locator, String errorMessage, long timeoutInSeconds) {
+    public boolean waitForElementNotPresent(WebElement locator, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         try {
@@ -52,45 +52,7 @@ public class MainPageObject {
         }
     }
 
-    public void waitForElementAndClick(MobileElement locator, String errorMessage, long timeoutInSeconds) {
-        int numberOfRetry = 0;
-        boolean successfulClick = false;
-        do {
-            try {
-                MobileElement element = waitForElementPresent(locator, errorMessage, timeoutInSeconds);
-                element.click();
-                successfulClick = true;
-            } catch (StaleElementReferenceException se) {
-                numberOfRetry++;
-                log.info(String.format("Failed to click on element %s due to the StaleElementReferenceException", locator));
-                if (numberOfRetry == 3) {
-                    se.printStackTrace();
-                    fail(String.format("Cannot click on element %s due to the StaleElementReferenceException", locator));
-                }
-            }
-        } while (!successfulClick);
-    }
-
-    public void waitForElementAndClick(MobileElement locator, String errorMessage) {
-        int numberOfRetry = 0;
-        boolean successfulClick = false;
-        do {
-            try {
-                MobileElement element = waitForElementPresent(locator, errorMessage, 5);
-                element.click();
-                successfulClick = true;
-            } catch (StaleElementReferenceException se) {
-                numberOfRetry++;
-                log.info(String.format("Failed to click on element %s due to the StaleElementReferenceException", locator));
-                if (numberOfRetry == 3) {
-                    se.printStackTrace();
-                    fail(String.format("Cannot click on element %s due to the StaleElementReferenceException", locator));
-                }
-            }
-        } while (!successfulClick);
-    }
-
-    public MobileElement getElementByText(String text, List<MobileElement> searchResultsByTitle) {
+    public WebElement getElementByPartialText(String text, List<WebElement> searchResultsByTitle) {
         int numberOfRetry = 0;
         boolean successfulClick = false;
         if (searchResultsByTitle.size() == 0) {
@@ -99,9 +61,98 @@ public class MainPageObject {
         }
         do {
             try {
-                for (MobileElement mobileElement : searchResultsByTitle) {
-                    if (mobileElement.getText().equalsIgnoreCase(text)) {
+                for (WebElement mobileElement : searchResultsByTitle) {
+                    if (mobileElement.getText().toLowerCase().contains(text.toLowerCase())) {
                         return mobileElement;
+                    }
+                }
+                successfulClick = true;
+            } catch (StaleElementReferenceException sre) {
+                numberOfRetry++;
+                log.info(String.format("Failed to find element due to the StaleElementReferenceException"));
+                if (numberOfRetry == 3) {
+                    sre.printStackTrace();
+                    successfulClick = true;
+                    fail(String.format("Cannot find element due to the StaleElementReferenceException"));
+                }
+            }
+        } while (!successfulClick);
+        return emptyElemForReturn;
+//        throw new Error("Cannot find article with title: " + text);
+    }
+
+    public List<WebElement> waitForListOfElementsPresent(List<WebElement> locator, String errorMessage, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(errorMessage + "\n");
+        try {
+            List<WebElement> listOfElements = locator.stream().filter(e -> isClickable(wait.until(ExpectedConditions.visibilityOf((e))))).collect(Collectors.toList());
+            return listOfElements;
+        } catch (Exception tex) {
+            tex.printStackTrace();
+            fail(errorMessage);
+        }
+        throw new Error("Cannot find list of elements");
+    }
+
+    public boolean isClickable(WebElement element) {
+        if (element.isDisplayed() && element.isEnabled()) {
+            return true;
+        } else {
+            log.info("Element is not clickable");
+            return false;
+        }
+    }
+
+    public void waitForElementAndClick(WebElement locator, String errorMessage, long timeoutInSeconds) {
+        int numberOfRetry = 0;
+        boolean successfulClick = false;
+        do {
+            try {
+                WebElement element = waitForElementPresent(locator, errorMessage, timeoutInSeconds);
+                element.click();
+                successfulClick = true;
+            } catch (StaleElementReferenceException | ElementClickInterceptedException se) {
+                numberOfRetry++;
+                log.info(String.format("Failed to click on element %s due to the StaleElementReferenceException", locator));
+                if (numberOfRetry == 3) {
+                    se.printStackTrace();
+                    fail(String.format("Cannot click on element %s due to the StaleElementReferenceException", locator));
+                }
+            }
+        } while (!successfulClick);
+    }
+
+    public void waitForElementAndClick(WebElement locator, String errorMessage) {
+        int numberOfRetry = 0;
+        boolean successfulClick = false;
+        do {
+            try {
+                WebElement element = waitForElementPresent(locator, errorMessage, 5);
+                element.click();
+                successfulClick = true;
+            } catch (StaleElementReferenceException se) {
+                numberOfRetry++;
+                log.info(String.format("Failed to click on element %s due to the StaleElementReferenceException", locator));
+                if (numberOfRetry == 3) {
+                    se.printStackTrace();
+                    fail(String.format("Cannot click on element %s due to the StaleElementReferenceException", locator));
+                }
+            }
+        } while (!successfulClick);
+    }
+
+    public WebElement getElementByText(String text, List<WebElement> searchResultsByTitle) {
+        int numberOfRetry = 0;
+        boolean successfulClick = false;
+        if (searchResultsByTitle.size() == 0) {
+            log.info((String.format("Search results with text: %s is not present ", text)));
+            return emptyElemForReturn;
+        }
+        do {
+            try {
+                for (WebElement WebElement : searchResultsByTitle) {
+                    if (WebElement.getText().equalsIgnoreCase(text)) {
+                        return WebElement;
                     }
                 }
                 successfulClick = true;
@@ -118,7 +169,7 @@ public class MainPageObject {
         throw new Error("Cannot find article with title: " + text);
     }
 
-    public MobileElement waitForElementPresent(MobileElement locator, String errorMessage, long timeoutInSeconds) {
+    public WebElement waitForElementPresent(WebElement locator, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         try {
@@ -130,7 +181,7 @@ public class MainPageObject {
         return locator;
     }
 
-    MobileElement waitForElementPresent(MobileElement locator, String errorMessage) {
+    WebElement waitForElementPresent(WebElement locator, String errorMessage) {
         return waitForElementPresent(locator, errorMessage, 5);
     }
 
@@ -170,21 +221,21 @@ public class MainPageObject {
         return true;
     }
 
-    public MobileElement waitForElementAndSendKeys(MobileElement locator, String value, String errorMessage, long timeoutInSeconds) {
-        MobileElement element = waitForElementPresent(locator, errorMessage, timeoutInSeconds);
+    public WebElement waitForElementAndSendKeys(WebElement locator, String value, String errorMessage, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(locator, errorMessage, timeoutInSeconds);
         element.sendKeys(value);
         return element;
     }
 
-    public MobileElement waitForElementAndSendKeys(MobileElement locator, String value, String errorMessage) {
-        MobileElement element = waitForElementPresent(locator, errorMessage, 5);
+    public WebElement waitForElementAndSendKeys(WebElement locator, String value, String errorMessage) {
+        WebElement element = waitForElementPresent(locator, errorMessage, 5);
         element.sendKeys(value);
         return element;
     }
 
     protected void swipe(WaitOptions timeOfSwipe, Direction direction) {
-        if (driver instanceof AppiumDriver){
-            AppiumDriver<MobileElement> driver = (AppiumDriver<MobileElement>)this.driver;
+        if (driver instanceof AppiumDriver) {
+            AppiumDriver<WebElement> driver = (AppiumDriver<WebElement>) this.driver;
             TouchAction action = new TouchAction(driver);
             Dimension size = driver.manage().window().getSize();
             int startY;
@@ -219,15 +270,15 @@ public class MainPageObject {
         }
     }
 
-    public void swipe(WaitOptions timeOfSwipe, Direction direction, MobileElement locator) {
+    public void swipe(WaitOptions timeOfSwipe, Direction direction, WebElement locator) {
         if (driver instanceof AppiumDriver) {
-            AppiumDriver<MobileElement> driver = (AppiumDriver<MobileElement>) this.driver;
+            AppiumDriver<WebElement> driver = (AppiumDriver<WebElement>) this.driver;
             TouchAction action = new TouchAction(driver);
             int numberOfTry = 0;
             boolean successfulSwipe = false;
             do {
                 try {
-                    MobileElement elementForSwipe = waitForElementPresent(locator, "Cannot find element for swipe", 20);
+                    WebElement elementForSwipe = waitForElementPresent(locator, "Cannot find element for swipe", 20);
                     Dimension sizeOfElement = elementForSwipe.getSize();
 
                     int startY;
