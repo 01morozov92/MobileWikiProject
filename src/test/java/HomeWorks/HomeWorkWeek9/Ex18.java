@@ -3,11 +3,15 @@ package HomeWorks.HomeWorkWeek9;
 import lib.CoreTestCase;
 import lib.uiMobile.SearchPageObject;
 import org.testng.annotations.Test;
+import ru.yandex.qatools.allure.annotations.Description;
+import ru.yandex.qatools.allure.annotations.Step;
 
 public class Ex18 extends CoreTestCase {
 
-        //Тест полностью кросс платформенный, работает одинакого как на iOS так и на Android так и для Web
+        //Тест полностью кросс платформенный, работает одинаково как на iOS так и на Android так и для Web
         @Test
+        @Step("Начало теста testCheckArticlesByTitleAndDescriptionCrossPlatform")
+        @Description("Проверка статьи по заголовку и описанию в результате поисковой выдачи")
         public void testCheckArticlesByTitleAndDescriptionCrossPlatform() {
             SearchPageObject searchPageObject = new SearchPageObject(driver);
             searchPageObject.typeSearchLine("Android");

@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 
 public class Ex12 extends CoreTestCase {
 
-    //Тест полностью кросс платформенный, работает одинакого как на iOS так и на Android
+    //Тест полностью кросс платформенный, работает одинаково как на iOS так и на Android
     @Test
     public void testCheckArticlesByTitleAndDescriptionCrossPlatform() {
         SearchPageObject searchPageObject = new SearchPageObject(driver);

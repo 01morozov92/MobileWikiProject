@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 
+import static org.testng.Assert.fail;
+
 public class Ex6 extends CoreTestCase {
 
     @Test

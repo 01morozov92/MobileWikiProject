@@ -8,6 +8,7 @@ import org.junit.After;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.*;
+import ru.yandex.qatools.allure.annotations.Step;
 
 import java.time.Duration;
 
@@ -15,15 +16,15 @@ import static java.lang.Thread.sleep;
 import static lib.Platform.isWeb;
 
 @Log4j2
-public class CoreTestCase extends TestCase {
+public class CoreTestCase{
 
     protected RemoteWebDriver driver;
     protected Platform Platform;
 
     @BeforeTest
+    @Step("Запуск драйвера и сессии")
     @Parameters({"platform", "udid", "platformVersion", "avd"})
     protected void setUp(String platform, String udid, String platformVersion, String avd) throws Exception {
-        super.setUp();
         driver = Platform.getInstance().getDriver(platform, udid, platformVersion, avd);
         this.rotateScreenPortrait();
         this.openWikiPageForMobileWeb();
@@ -32,9 +33,9 @@ public class CoreTestCase extends TestCase {
         }
     }
 
-    @AfterSuite
-    @Override
-    protected void tearDown() throws Exception {
+    @AfterTest
+    @Step("Отсановка драйвера и сессии")
+    protected void tearDown()  {
         driver.quit();
         if (!isWeb()) {
             if (driver == null) {
@@ -81,6 +82,7 @@ public class CoreTestCase extends TestCase {
         }
     }
 
+    @Step("Пропускаем стартовый экран")
     private void skipWelcomePage() {
         if (lib.Platform.getInstance().isIOS()) {
             WelcomePageObject welcomePageObject = new WelcomePageObject(driver);

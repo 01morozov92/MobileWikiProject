@@ -15,10 +15,8 @@ public class Ex5 extends CoreTestCase {
     @Test
     public void testDeleteArticleBySwipe() {
         //Инициализация необходимых параметров
-        String actualResult = null;
         String nameOfArticle = "AppImage";
         String textOfTitle = "AppImage";
-        String textOfTitleWeb = "AppImage — Википедия";
         MyListsPageObject myListsPageObject = new MyListsPageObject(driver);
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         ArticlePageObject articlePageObject = new ArticlePageObject(driver);
@@ -40,12 +38,9 @@ public class Ex5 extends CoreTestCase {
         myListsPageObject.deleteArticle("Java");
         myListsPageObject.chooseList(nameOfArticle);
         String expectedResult = "AppImage";
-        if(isWeb()){
-        actualResult = articlePageObject.getTitleOfArticle(textOfTitleWeb);
-        } else {
-        actualResult = articlePageObject.getTitleOfArticle(textOfTitle);
-        }
-        Assert.assertEquals(expectedResult, actualResult);
+        String actualResult = articlePageObject.getTitleOfArticle(textOfTitle);
+        Assert.assertTrue(actualResult.contains(expectedResult));
     }
 }
+
 

@@ -8,7 +8,7 @@
             <parameter name="udid" value="emulator-5554"/>
             <parameter name="platformVersion" value="9"/>
             <classes>
-                <class name="HomeWorks.HomeWorkWeek7.Ex12"/>
+                <class name="HomeWorks.HomeWorkWeek9.Ex18"/>
             </classes>
         </test>
 
@@ -18,7 +18,7 @@
         <parameter name="udid" value="emulator-5556"/>
         <parameter name="platformVersion" value="9"/>
         <classes>
-            <class name="HomeWorks.HomeWorkWeek7.Ex12"/>
+            <class name="HomeWorks.HomeWorkWeek9.Ex18"/>
         </classes>
     </test>
 

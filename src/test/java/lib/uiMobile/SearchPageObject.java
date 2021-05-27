@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
+import ru.yandex.qatools.allure.annotations.Step;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,8 +86,8 @@ public class SearchPageObject extends MainPageObject {
         super(driver);
     }
 
+    @Step("Ищем статьи по заданному заголовку: {0} и описанию: {1}")
     public WebElement waitForElementByTitleAndDescription(String title, String description) {
-
         if (isIOS()) {
             for (int i = 0; i < searchResults.size() - 1; i++) {
                 String articleTitle = waitForElementPresent(searchResults.get(i).findElement(By.xpath(ARTICLE_TITLE_IOS)), "Cannot find element title", 10).getText();
