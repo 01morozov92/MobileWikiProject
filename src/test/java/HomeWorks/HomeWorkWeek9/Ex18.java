@@ -1,17 +1,22 @@
 package HomeWorks.HomeWorkWeek9;
 
+import io.qameta.allure.Epic;
 import lib.CoreTestCase;
 import lib.uiMobile.SearchPageObject;
 import org.testng.annotations.Test;
-import ru.yandex.qatools.allure.annotations.Description;
-import ru.yandex.qatools.allure.annotations.Step;
+import ru.yandex.qatools.allure.annotations.*;
+import ru.yandex.qatools.allure.model.SeverityLevel;
 
+@Epic("Тесты для статей")
 public class Ex18 extends CoreTestCase {
 
         //Тест полностью кросс платформенный, работает одинаково как на iOS так и на Android так и для Web
         @Test
+        @Severity(value = SeverityLevel.BLOCKER)
+        @Features("Поиск статьи по заголовку и описанию")
         @Step("Начало теста testCheckArticlesByTitleAndDescriptionCrossPlatform")
-        @Description("Проверка статьи по заголовку и описанию в результате поисковой выдачи")
+        @Title("Проверка статьи по заголовку и описанию в результате поисковой выдачи")
+        @Description("Вводим в поиск Android > проверяем выдачу на наличие 3ех результатов > переходим в 3-ю статью")
         public void testCheckArticlesByTitleAndDescriptionCrossPlatform() {
             SearchPageObject searchPageObject = new SearchPageObject(driver);
             searchPageObject.typeSearchLine("Android");

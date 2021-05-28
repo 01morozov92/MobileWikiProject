@@ -15,6 +15,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ru.yandex.qatools.allure.annotations.Step;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -40,6 +41,7 @@ public class MainPageObject {
     @iOSXCUITFindBy(xpath = "//*")
     static public List<WebElement> allElements;
 
+    @Step("Ожидаем исчезновения элемента по локатору: {0}")
     public boolean waitForElementNotPresent(WebElement locator, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -52,6 +54,7 @@ public class MainPageObject {
         }
     }
 
+    @Step("Получаем элемент по части текста: {0}")
     public WebElement getElementByPartialText(String text, List<WebElement> searchResultsByTitle) {
         int numberOfRetry = 0;
         boolean successfulClick = false;
@@ -81,6 +84,7 @@ public class MainPageObject {
 //        throw new Error("Cannot find article with title: " + text);
     }
 
+    @Step("Ожидаем и получаем список элементов по локатору: {0}")
     public List<WebElement> waitForListOfElementsPresent(List<WebElement> locator, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
@@ -94,6 +98,7 @@ public class MainPageObject {
         throw new Error("Cannot find list of elements");
     }
 
+    @Step("Проверяем элемент на кликабельность")
     public boolean isClickable(WebElement element) {
         if (element.isDisplayed() && element.isEnabled()) {
             return true;
@@ -103,6 +108,7 @@ public class MainPageObject {
         }
     }
 
+    @Step("Кликаем на элемент по локатору {0} с ожиданием в {2} секунд")
     public void waitForElementAndClick(WebElement locator, String errorMessage, long timeoutInSeconds) {
         int numberOfRetry = 0;
         boolean successfulClick = false;
@@ -122,6 +128,7 @@ public class MainPageObject {
         } while (!successfulClick);
     }
 
+    @Step("Кликаем на элемент по локатору {0}")
     public void waitForElementAndClick(WebElement locator, String errorMessage) {
         int numberOfRetry = 0;
         boolean successfulClick = false;
@@ -141,6 +148,7 @@ public class MainPageObject {
         } while (!successfulClick);
     }
 
+    @Step("Получаем элемент по точному тексту: {0}")
     public WebElement getElementByText(String text, List<WebElement> searchResultsByTitle) {
         int numberOfRetry = 0;
         boolean successfulClick = false;
@@ -185,6 +193,7 @@ public class MainPageObject {
         return waitForElementPresent(locator, errorMessage, 5);
     }
 
+    @Step("Ждем {0} секунд")
     public void sleep(int milliSeconds) {
         try {
             Thread.sleep(milliSeconds);
@@ -193,7 +202,7 @@ public class MainPageObject {
         }
     }
 
-
+    @Step("Проверяем присутствие элемента на странице")
     public boolean exist(WebElement element) {
         int j = 0;
         boolean webElementPassed = false;
@@ -221,18 +230,18 @@ public class MainPageObject {
         return true;
     }
 
-    public WebElement waitForElementAndSendKeys(WebElement locator, String value, String errorMessage, long timeoutInSeconds) {
+    @Step("Вводим текст в элемент по локатору: {0} с ожиданием {2} секунд")
+    public void waitForElementAndSendKeys(WebElement locator, String value, String errorMessage, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(locator, errorMessage, timeoutInSeconds);
         element.sendKeys(value);
-        return element;
     }
 
-    public WebElement waitForElementAndSendKeys(WebElement locator, String value, String errorMessage) {
+    public void waitForElementAndSendKeys(WebElement locator, String value, String errorMessage) {
         WebElement element = waitForElementPresent(locator, errorMessage, 5);
         element.sendKeys(value);
-        return element;
     }
 
+    @Step("Свайпаем по экрану в направлении {1}")
     protected void swipe(WaitOptions timeOfSwipe, Direction direction) {
         if (driver instanceof AppiumDriver) {
             AppiumDriver<WebElement> driver = (AppiumDriver<WebElement>) this.driver;
@@ -270,6 +279,7 @@ public class MainPageObject {
         }
     }
 
+    @Step("Свайпаем по элементу с локатором: {2} в направлении {1}")
     public void swipe(WaitOptions timeOfSwipe, Direction direction, WebElement locator) {
         if (driver instanceof AppiumDriver) {
             AppiumDriver<WebElement> driver = (AppiumDriver<WebElement>) this.driver;

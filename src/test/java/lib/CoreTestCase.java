@@ -10,13 +10,15 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.*;
 import ru.yandex.qatools.allure.annotations.Step;
 
+import java.io.FileOutputStream;
 import java.time.Duration;
+import java.util.Properties;
 
 import static java.lang.Thread.sleep;
 import static lib.Platform.isWeb;
 
 @Log4j2
-public class CoreTestCase{
+public class CoreTestCase {
 
     protected RemoteWebDriver driver;
     protected Platform Platform;
@@ -26,6 +28,7 @@ public class CoreTestCase{
     @Parameters({"platform", "udid", "platformVersion", "avd"})
     protected void setUp(String platform, String udid, String platformVersion, String avd) throws Exception {
         driver = Platform.getInstance().getDriver(platform, udid, platformVersion, avd);
+        this.createAllurePropertyFile();
         this.rotateScreenPortrait();
         this.openWikiPageForMobileWeb();
         if (!isWeb()) {
@@ -35,7 +38,7 @@ public class CoreTestCase{
 
     @AfterTest
     @Step("Отсановка драйвера и сессии")
-    protected void tearDown()  {
+    protected void tearDown() {
         driver.quit();
         if (!isWeb()) {
             if (driver == null) {
@@ -90,6 +93,20 @@ public class CoreTestCase{
         } else {
             WelcomePageObject welcomePageObject = new WelcomePageObject(driver);
             welcomePageObject.clickSkip();
+        }
+    }
+
+    public void createAllurePropertyFile() {
+        String path = "target/allure-results";
+        try {
+            Properties props = new Properties();
+            FileOutputStream fos = new FileOutputStream(path + "/environment.properties");
+            props.setProperty("Environment", Platform.getInstance().getPlatformVar());
+            props.store(fos, "See https://github.com");
+            fos.close();
+        } catch (Exception ex) {
+            log.error("IO problem");
+            ex.printStackTrace();
         }
     }
 }

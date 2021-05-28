@@ -64,15 +64,11 @@ public class SearchPageObject extends MainPageObject {
     @FindBy(xpath = "wikidata-description")
     List<WebElement> descriptionWeb;
 
-
-//    $$$$$$$
-
     @FindBy(className = "page-summary")
     List<WebElement> allSearchResults;
 
     @FindBy(xpath = "//*[text()='AppImage']")
     WebElement AppImageArticle;
-//    $$$$$$$
 
     private static final String
             ARTICLE_TITLE = "org.wikipedia:id/page_list_item_title",
