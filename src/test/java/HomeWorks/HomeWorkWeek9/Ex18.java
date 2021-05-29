@@ -2,8 +2,10 @@ package HomeWorks.HomeWorkWeek9;
 
 import io.qameta.allure.Epic;
 import lib.CoreTestCase;
+import lib.uiMobile.MainPageObject;
 import lib.uiMobile.SearchPageObject;
 import org.testng.annotations.Test;
+import org.testng.reporters.jq.Main;
 import ru.yandex.qatools.allure.annotations.*;
 import ru.yandex.qatools.allure.model.SeverityLevel;
 
@@ -19,6 +21,8 @@ public class Ex18 extends CoreTestCase {
         @Description("Вводим в поиск Android > проверяем выдачу на наличие 3ех результатов > переходим в 3-ю статью")
         public void testCheckArticlesByTitleAndDescriptionCrossPlatform() {
             SearchPageObject searchPageObject = new SearchPageObject(driver);
+            MainPageObject mainPageObject = new MainPageObject(driver);
+            mainPageObject.saveAllureScreenshot();
             searchPageObject.typeSearchLine("Android");
             searchPageObject.waitForElementByTitleAndDescription
                     ("Android Studio", "среда разработки для Android");

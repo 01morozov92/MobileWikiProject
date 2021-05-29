@@ -15,6 +15,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import ru.yandex.qatools.allure.annotations.Attachment;
 import ru.yandex.qatools.allure.annotations.Step;
 
 import java.util.List;
@@ -333,6 +334,11 @@ public class MainPageObject {
                 }
             } while (!successfulSwipe);
         }
+    }
+
+    @Attachment(value = "Скриншот страницы", type = "image/png")
+    public byte[] saveAllureScreenshot() {
+        return ((TakesScreenshot) this.driver).getScreenshotAs(OutputType.BYTES);
     }
 
     private By getLocatorByString(String locator_with_type) {
