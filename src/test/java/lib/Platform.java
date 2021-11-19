@@ -223,9 +223,9 @@ public class Platform {
 
     public void AppiumServer() {
         this.serviceBuilder.withAppiumJS(new File("C:\\Users\\user\\AppData\\Local\\Programs\\Appium\\resources\\app\\node_modules\\appium\\build\\lib\\main.js"));
-        this.serviceBuilder.usingAnyFreePort();
+//        this.serviceBuilder.usingAnyFreePort();
         this.serviceBuilder.withArgument(GeneralServerFlag.SESSION_OVERRIDE);
-//        this.serviceBuilder.withIPAddress("127.0.0.1");
+        this.serviceBuilder.withIPAddress("127.0.0.1");
         this.serviceBuilder.withArgument(GeneralServerFlag.LOG_LEVEL, "error");
         server = AppiumDriverLocalService.buildService(serviceBuilder);
         server.start();
